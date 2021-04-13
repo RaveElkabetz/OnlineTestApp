@@ -40,13 +40,13 @@ namespace OnlineTestApp.Services
                     string addExam = "INSERT INTO Exams (Title, DateStarted, DurationMinutes ,TeacherId)" +
                                      " VALUES (@Title,@DateStarted,@DurationMinutes,@TeacherId); " +
                                      "SELECT SCOPE_IDENTITY()";
-                    SqlCommand addCopmmand = new SqlCommand(addExam, connection);
-                    addCopmmand.Parameters.AddWithValue("@Title", newExam.Title);
-                    addCopmmand.Parameters.AddWithValue("@DateStarted", newExam.DateStarted);
-                    addCopmmand.Parameters.AddWithValue("@DurationMinutes", newExam.DurationMinutes);
-                    addCopmmand.Parameters.AddWithValue("@TeacherId", newExam.TeacherId);
+                    SqlCommand addCommand = new SqlCommand(addExam, connection);
+                    addCommand.Parameters.AddWithValue("@Title", newExam.Title);
+                    addCommand.Parameters.AddWithValue("@DateStarted", newExam.DateStarted);
+                    addCommand.Parameters.AddWithValue("@DurationMinutes", newExam.DurationMinutes);
+                    addCommand.Parameters.AddWithValue("@TeacherId", newExam.TeacherId);
 
-                    newId = Convert.ToInt32(addCopmmand.ExecuteScalar());
+                    newId = Convert.ToInt32(addCommand.ExecuteScalar());
 
                 }
 
@@ -116,6 +116,7 @@ namespace OnlineTestApp.Services
                         examModel.DateStarted = reader.GetDateTime(2);
                         examModel.DurationMinutes = reader.GetInt32(3);
                         examModel.TeacherId = reader.GetInt32(4);
+                        
                     }
                 }
             }
@@ -217,6 +218,7 @@ namespace OnlineTestApp.Services
                     updateCommand.Parameters.AddWithValue("@DateStarted", examToUpdate.DateStarted);
                     updateCommand.Parameters.AddWithValue("@DurationMinutes", examToUpdate.DurationMinutes);
                     updateCommand.Parameters.AddWithValue("@TeacherId", examToUpdate.TeacherId);
+                    
 
                     int roesAffected = updateCommand.ExecuteNonQuery();
                     if (roesAffected > 0)

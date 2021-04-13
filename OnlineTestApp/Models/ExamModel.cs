@@ -10,8 +10,8 @@ namespace OnlineTestApp.Models
 
         public ExamModel()
         {
-            Questions = new List<QuestionModel>();
-            Grades = new Dictionary<StudentModel, int>();
+            Questions = new List<DbQuestionModel>();
+            Grades = new Dictionary<StudentModel, decimal>();
         }
         public int Id { get; set; }
 
@@ -23,8 +23,8 @@ namespace OnlineTestApp.Models
 
         public int DurationMinutes { get; set; }
 
-        public Dictionary<StudentModel, int> Grades { get; set; }
+        public Dictionary<StudentModel, decimal> Grades { get; set; }
 
-        public List<QuestionModel> Questions { get; set; }
+        public List<DbQuestionModel> Questions { get; set; }
     }
 }
