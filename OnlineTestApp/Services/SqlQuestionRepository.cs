@@ -24,12 +24,12 @@ namespace OnlineTestApp.Services
         /// </summary>
         public SqlQuestionsRepository()
         {
-            this.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=ExamsDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            this.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Questions;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         }
 
-        public int AddQuestion(DbQuestionModel newExam)
+        public int AddQuestion(DbQuestionModel newQuestion)
         {
-            DbQuestionModel newQuestionToAdd= null;
+            //DbQuestionModel newQuestionToAdd= null;
             SqlConnection connection = null;
             int newId = -1;
             try
@@ -49,11 +49,11 @@ namespace OnlineTestApp.Services
                                      " VALUES (@Question,@Choises,@Correct,@ExamId,@Points); " +
                                      "SELECT SCOPE_IDENTITY()";
                     SqlCommand addCommand = new SqlCommand(addQuestion, connection);
-                    addCommand.Parameters.AddWithValue("@Question", newQuestionToAdd.Question);
-                    addCommand.Parameters.AddWithValue("@Choises", newQuestionToAdd.Points);
-                    addCommand.Parameters.AddWithValue("@Correct", newQuestionToAdd.Choices);
-                    addCommand.Parameters.AddWithValue("@ExamId", newQuestionToAdd.Correct);
-                    addCommand.Parameters.AddWithValue("@Points", newQuestionToAdd.ExamId);
+                    addCommand.Parameters.AddWithValue("@Question", newQuestion.Question);
+                    addCommand.Parameters.AddWithValue("@Choises", newQuestion.Points);
+                    addCommand.Parameters.AddWithValue("@Correct", newQuestion.Choices);
+                    addCommand.Parameters.AddWithValue("@ExamId", newQuestion.Correct);
+                    addCommand.Parameters.AddWithValue("@Points", newQuestion.ExamId);
                     
 
                     newId = Convert.ToInt32(addCommand.ExecuteScalar());

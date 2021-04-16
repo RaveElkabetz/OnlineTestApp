@@ -17,13 +17,18 @@ namespace OnlineTestApp.Services
 
         public SqlExamRepository() 
         {
-            this.ConnectionString =  @"Data Source=(localdb)\ProjectsV13;Initial Catalog=EXAMS;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            this.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OnlineExamsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            //this.ConnectionString =  @"Data Source=(localdb)\ProjectsV13;Initial Catalog=EXAMS;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         }
+        /*public SqlExamRepository(string connectionString)
+        {
+            this.ConnectionString = connectionString;
+        }*/
         public int AddExam(ExamModel newExam)
         {
             ExamModel examModel = null;
             SqlConnection connection = null;
-            int newId = -1;
+            //int newId = -1;
             try
             {
                 //01 Create Connection
@@ -38,19 +43,19 @@ namespace OnlineTestApp.Services
                     //                  $" VALUES ('{newExam.Title}','{timeText}',{newExam.DurationMinutes},{newExam.TeachrId})";
 
                     string addExam = "INSERT INTO Exams (Title, DateStarted, DurationMinutes ,TeacherId)" +
-                                     " VALUES (@Title,@DateStarted,@DurationMinutes,@TeacherId); " +
-                                     "SELECT SCOPE_IDENTITY()";
+                                     " VALUES (@Title,@DateStarted,@DurationMinutes,@TeacherId); ";
                     SqlCommand addCommand = new SqlCommand(addExam, connection);
                     addCommand.Parameters.AddWithValue("@Title", newExam.Title);
                     addCommand.Parameters.AddWithValue("@DateStarted", newExam.DateStarted);
                     addCommand.Parameters.AddWithValue("@DurationMinutes", newExam.DurationMinutes);
                     addCommand.Parameters.AddWithValue("@TeacherId", newExam.TeacherId);
 
-                    newId = Convert.ToInt32(addCommand.ExecuteScalar());
+                    
+                    addCommand.Parameters.AddWithValue("@Id", newExam.Id);
 
                 }
 
-                return newId;
+                return newExam.Id;
 
             }
             catch (Exception ex)
@@ -105,7 +110,7 @@ namespace OnlineTestApp.Services
             using (var connection = new SqlConnection(this.ConnectionString))
             {
                 connection.Open();
-                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXAMS WHERE TeacherId =" + teacherId.ToString());
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXAMS WHERE TeacherId =" + teacherId.ToString(),connection);
                 using(var reader = allCommand.ExecuteReader())
                 {
                     while (reader.Read())
@@ -130,25 +135,29 @@ namespace OnlineTestApp.Services
 
         public List<ExamModel> GetAllExams()
         {
+            //SqlConnection connection = null;
             List<ExamModel> examsList = new List<ExamModel>();
-            using (var connection = new SqlConnection(this.ConnectionString))
-            {
+            using (var connection = new SqlConnection(this.ConnectionString)) 
+            { 
                 connection.Open();
-                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXAMS");
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXAMS",connection);
                 using (var reader = allCommand.ExecuteReader()) 
-                {
-                    while (reader.Read()) 
-                    {
-                        ExamModel examModel = new ExamModel();
-                        examModel.Id = reader.GetInt32(0);
-                        examModel.Title = reader.GetString(1);
-                        examModel.DateStarted = reader.GetDateTime(2);
-                        examModel.DurationMinutes = reader.GetInt32(3);
-                        examModel.TeacherId = reader.GetInt32(4);
-                        examsList.Add(examModel);
-                    }
+                { 
+
+                    while (reader.Read())
+                        {
+                            ExamModel examModel = new ExamModel();
+                            examModel.Id = reader.GetInt32(0);
+                            examModel.Title = reader.GetString(1);
+                            examModel.DateStarted = reader.GetDateTime(2);
+                            examModel.DurationMinutes = reader.GetInt32(3);
+                            examModel.TeacherId = reader.GetInt32(4);
+                            examsList.Add(examModel);
+                        }
                 }
             }
+                
+            
 
             return examsList;
         }
@@ -161,13 +170,9 @@ namespace OnlineTestApp.Services
                 
                 
                 connection.Open();
-                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXMAS WHERE Id =" + Id.ToString(), connection);
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM Exams WHERE Id =" + Id.ToString(), connection);
                 
-                
-             
-                Console.WriteLine("Cannot connect to the data base!");
-                return null;
-                
+           
 
                 using (var reader = allCommand.ExecuteReader())
                 {

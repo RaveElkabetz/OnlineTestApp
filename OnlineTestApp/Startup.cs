@@ -36,6 +36,7 @@ namespace OnlineTestApp
 
             //01) DECLARE INTERFACE PER SERVICES
             services.AddSingleton<IExamRepository, SqlExamRepository>();
+            services.AddSingleton<IQuestionsRepository, SqlQuestionsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

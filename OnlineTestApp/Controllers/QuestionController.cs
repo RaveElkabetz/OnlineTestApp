@@ -4,84 +4,74 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OnlineTestApp.Services;
+using OnlineTestApp.Models;
 
 namespace OnlineTestApp.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class QuestionController : Controller
     {
-        // GET: QuestionController
-        public ActionResult Index()
+        public QuestionController(IQuestionsRepository questionRepository)
         {
-            return View();
+            this.questionRepository = questionRepository;
+        }
+        private IQuestionsRepository questionRepository = null;
+        // GET: api/<ValuesController>
+        /*
+        [HttpGet]
+        public IEnumerable<ExamModel> Get(int id)
+        {
+            var exams = questionRepository.GetAllQuestionByExamId(id);
+            return exams;
+        }*/
+
+        // GET api/<ValuesController>/5
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            List <DbQuestionModel> examsQuestions = questionRepository.GetAllQuestionByExamId(id);
+            if (examsQuestions != null)
+                return Ok(examsQuestions);
+            else
+                return NotFound(id);
+
         }
 
-        // GET: QuestionController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: QuestionController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: QuestionController/Create
+        // POST api/<ValuesController>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Post(DbQuestionModel newQuestion)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            int createdId = questionRepository.AddQuestion(newQuestion);
+            newQuestion.Id = createdId;
+
+            //URL FOR THE NEW  EXAM
+            return CreatedAtAction(nameof(Get), new { id = createdId }, newQuestion);
+
         }
 
-        // GET: QuestionController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT api/<ValuesController>/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] DbQuestionModel newQuestion)
         {
-            return View();
+            bool isUpdated = questionRepository.UpdateQuestion(newQuestion);
+            if (isUpdated)
+                return Ok(id);
+            else
+                return NotFound("Question-" + id + " Not Found");
         }
 
-        // POST: QuestionController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE api/<ValuesController>/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            bool isDeleted = questionRepository.DeleteQuestion(id);
+            if (isDeleted)
+                return Ok("Question [" + id + "] Deleted");//200
+            else
 
-        // GET: QuestionController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: QuestionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                return NotFound("Question-" + id + " Not Found");//404
         }
     }
 }
