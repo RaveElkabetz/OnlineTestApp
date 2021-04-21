@@ -15,20 +15,21 @@ namespace OnlineTestApp.Services
         /// </summary>
         private string ConnectionString { get; set; }
 
-        public SqlExamRepository() 
+       
+        public SqlExamRepository() : this(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OnlineExamsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
         {
-            this.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OnlineExamsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            //this.ConnectionString =  @"Data Source=(localdb)\ProjectsV13;Initial Catalog=EXAMS;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
         }
-        /*public SqlExamRepository(string connectionString)
+
+        public SqlExamRepository(string connectionString)
         {
             this.ConnectionString = connectionString;
-        }*/
+        }
         public int AddExam(ExamModel newExam)
         {
             ExamModel examModel = null;
             SqlConnection connection = null;
-            //int newId = -1;
+            int newId = -1;
             try
             {
                 //01 Create Connection
@@ -43,19 +44,21 @@ namespace OnlineTestApp.Services
                     //                  $" VALUES ('{newExam.Title}','{timeText}',{newExam.DurationMinutes},{newExam.TeachrId})";
 
                     string addExam = "INSERT INTO Exams (Title, DateStarted, DurationMinutes ,TeacherId)" +
-                                     " VALUES (@Title,@DateStarted,@DurationMinutes,@TeacherId); ";
+                                     " VALUES (@Title,@DateStarted,@DurationMinutes,@TeacherId); " +
+                                     "SELECT SCOPE_IDENTITY()";
                     SqlCommand addCommand = new SqlCommand(addExam, connection);
+                    //addCommand.Parameters.AddWithValue("@Id", newExam.Id);
                     addCommand.Parameters.AddWithValue("@Title", newExam.Title);
                     addCommand.Parameters.AddWithValue("@DateStarted", newExam.DateStarted);
                     addCommand.Parameters.AddWithValue("@DurationMinutes", newExam.DurationMinutes);
                     addCommand.Parameters.AddWithValue("@TeacherId", newExam.TeacherId);
+                    newId = Convert.ToInt32(addCommand.ExecuteScalar());
 
-                    
-                    addCommand.Parameters.AddWithValue("@Id", newExam.Id);
+
 
                 }
 
-                return newExam.Id;
+                return newId;
 
             }
             catch (Exception ex)
@@ -140,7 +143,7 @@ namespace OnlineTestApp.Services
             using (var connection = new SqlConnection(this.ConnectionString)) 
             { 
                 connection.Open();
-                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXAMS",connection);
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM Exams",connection);
                 using (var reader = allCommand.ExecuteReader()) 
                 { 
 

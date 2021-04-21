@@ -11,7 +11,7 @@ namespace OnlineTestApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class QuestionController : Controller
+    public class QuestionController : ControllerBase
     {
         public QuestionController(IQuestionsRepository questionRepository)
         {
