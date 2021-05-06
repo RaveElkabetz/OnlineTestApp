@@ -10,16 +10,16 @@ namespace OnlineTestApp.Models
         
         public TeacherModel()
         {
-            TeachingTopics = new List<string>();
+            //TeachingTopics = new List<string>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateStartedWorking { get; set; }
-        public List<string> TeachingTopics { get; set; }
-        public List<ExamModel> UpcommingExams { get; set; }
+        //public List<string> TeachingTopics { get; set; }
+        //public List<ExamModel> UpcommingExams { get; set; }
 
-        public List<ExamModel>  ExamsGiven { get; set; }
+        //public List<ExamModel>  ExamsGiven { get; set; }
 
     
     }

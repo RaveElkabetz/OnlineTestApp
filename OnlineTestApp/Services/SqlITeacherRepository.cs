@@ -1,6 +1,7 @@
 ﻿using OnlineTestApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,49 +11,168 @@ namespace OnlineTestApp.Services
     {
        
         private string ConnectionString { get; set; }
-        bool ITeacherRepository.AddNewExam()
+
+
+        
+        public SqlITeacherRepository(): this(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OnlineExamsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False") 
         {
-            throw new NotImplementedException();
+
+        }
+        
+        public SqlITeacherRepository(string connectionString)
+        {
+            this.ConnectionString = connectionString;
         }
 
-        public SqlITeacherRepository()
+
+
+
+
+        public bool DeleteTeacher(int ID)
         {
-            this.ConnectionString = "";
+            SqlConnection connection = null;
+            bool isDeleted = false;
+            try
+            {
+                //01 Create Connection
+                using (connection = new SqlConnection(this.ConnectionString))
+                {
+                    //02 Open Connection
+                    connection.Open();
+                    string deleteQuery = "DELETE FROM Teachers WHERE Id = @Id";
+                    SqlCommand DeleteCommand = new SqlCommand(deleteQuery, connection);
+                    DeleteCommand.Parameters.AddWithValue("@Id", ID);
+
+                    int roesAffected = DeleteCommand.ExecuteNonQuery();
+                    if (roesAffected > 0)
+                        isDeleted = true;
+                }
+
+                return isDeleted;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                if (connection != null)
+                    connection.Close();
+            }
         }
 
-        int ITeacherRepository.AddQuestionToExam(ExamModel newExam)
+        public int AddNewTeacher(TeacherModel newTeacher)
         {
-            throw new NotImplementedException();
+            ExamModel examModel = null;
+            SqlConnection connection = null;
+            int newId = -1;
+            try
+            {
+                //01 Create Connection
+                using (connection = new SqlConnection(this.ConnectionString))
+                {
+                    //02 Open Connection
+                    connection.Open();
+
+      
+                    string addTeacher = "INSERT INTO Teachers (Name, DateStarted)" +
+                                     " VALUES (@Name,@DateStarted); " +
+                                     "SELECT SCOPE_IDENTITY()";
+                    SqlCommand addCommand = new SqlCommand(addTeacher, connection);
+                    addCommand.Parameters.AddWithValue("@Name", newTeacher.Name);
+                    addCommand.Parameters.AddWithValue("@DateStartedWorking", newTeacher.DateStartedWorking);
+                    newId = Convert.ToInt32(addCommand.ExecuteScalar());
+
+
+
+                }
+
+                return newId;
+
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+            finally
+            {
+                if (connection != null)
+                    connection.Close();
+            }
         }
 
-        bool ITeacherRepository.ChangeDurationOfExam(int minutes, int TeacherId)
-        {
-            throw new NotImplementedException();
-        }
 
-        bool ITeacherRepository.DeleteExam(int ID)
+        public TeacherModel GetTeacherById(int ID)
         {
-            throw new NotImplementedException();
-        }
+            TeacherModel teacherModel = null;
+            using (var connection = new SqlConnection(this.ConnectionString))
+            {
 
-        void ITeacherRepository.DeleteQuestionFromExam(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        List<ExamModel> ITeacherRepository.GetAllExamByTeacherId(int teacherId)
-        {
-            throw new NotImplementedException();
-        }
+                connection.Open();
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM Teachers WHERE Id =" + ID.ToString(), connection);
 
-        List<ExamModel> ITeacherRepository.GetAllExams()
-        {
-            throw new NotImplementedException();
-        }
 
-        ExamModel ITeacherRepository.GetGradesByExam(int Id)
+
+                using (var reader = allCommand.ExecuteReader())
+                {
+
+                    //Read ROW BY ROW
+                    while (reader.Read())
+                    {
+                        teacherModel = new TeacherModel();
+                        teacherModel.Id = reader.GetInt32(0);
+                        teacherModel.Name = reader.GetString(1);
+                        teacherModel.DateStartedWorking = reader.GetDateTime(2);
+                        
+
+                    }
+                }
+            }
+            return teacherModel;
+
+        }
+        public bool UpdateTeacher(TeacherModel teacherToUpdate)
         {
-            throw new NotImplementedException();
+            SqlConnection connection = null;
+            bool isUpdated = false;
+            try
+            {
+                //create connection
+                using (connection = new SqlConnection(this.ConnectionString))
+                {
+                    //02 open connection
+                    connection.Open();
+                    string updateQuery = "UPDATE Teachers SET " +
+                                          "Name = '@Name', " +
+                                          "DateStartedWorking = @DateStartedWorking, " +
+                                          "WHERE Id = @Id";
+                    SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
+                    updateCommand.Parameters.AddWithValue("@Id", teacherToUpdate.Id);
+                    updateCommand.Parameters.AddWithValue("@Name", teacherToUpdate.Name);
+                    updateCommand.Parameters.AddWithValue("@DateStartedWorking", teacherToUpdate.DateStartedWorking);
+
+
+
+                    int roesAffected = updateCommand.ExecuteNonQuery();
+                    if (roesAffected > 0)
+                        isUpdated = true;
+
+                }
+
+
+                return isUpdated;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                if (connection != null)
+                    connection.Close();
+            }
         }
     }
 }

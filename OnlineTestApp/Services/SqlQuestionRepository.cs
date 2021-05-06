@@ -19,14 +19,19 @@ namespace OnlineTestApp.Services
         /// </summary>
         private string ConnectionString { get; set; }
 
+        public SqlQuestionsRepository(): this(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OnlineExamsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False") 
+        {
+
+        }
+
         /// <summary>
         /// Empty
         /// </summary>
-        public SqlQuestionsRepository()
+        public SqlQuestionsRepository(string connectionString)
         {
-            this.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Questions;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            this.ConnectionString = connectionString;
         }
-
+        //@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OnlineExamsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public int AddQuestion(DbQuestionModel newQuestion)
         {
             //DbQuestionModel newQuestionToAdd= null;
@@ -45,15 +50,15 @@ namespace OnlineTestApp.Services
                     // string addExam = "INSERT INTO Exams (Title, DateStarted, DurationMinutes ,TeacherId)" +
                     //                  $" VALUES ('{newExam.Title}','{timeText}',{newExam.DurationMinutes},{newExam.TeachrId})";
 
-                    string addQuestion = "INSERT INTO Questions (Question, Choises, Correct ,ExamId, Points)" +
-                                     " VALUES (@Question,@Choises,@Correct,@ExamId,@Points); " +
+                    string addQuestion = "INSERT INTO Questions (Question, Choices, Correct ,ExamId, Points)" +
+                                     " VALUES (@Question,@Choices,@Correct,@ExamId,@Points); " +
                                      "SELECT SCOPE_IDENTITY()";
                     SqlCommand addCommand = new SqlCommand(addQuestion, connection);
                     addCommand.Parameters.AddWithValue("@Question", newQuestion.Question);
-                    addCommand.Parameters.AddWithValue("@Choises", newQuestion.Points);
-                    addCommand.Parameters.AddWithValue("@Correct", newQuestion.Choices);
-                    addCommand.Parameters.AddWithValue("@ExamId", newQuestion.Correct);
-                    addCommand.Parameters.AddWithValue("@Points", newQuestion.ExamId);
+                    addCommand.Parameters.AddWithValue("@Choices", newQuestion.Choices);
+                    addCommand.Parameters.AddWithValue("@Correct", newQuestion.Correct);
+                    addCommand.Parameters.AddWithValue("@ExamId", newQuestion.ExamId);
+                    addCommand.Parameters.AddWithValue("@Points", newQuestion.Points);
                     
 
                     newId = Convert.ToInt32(addCommand.ExecuteScalar());
@@ -123,7 +128,7 @@ namespace OnlineTestApp.Services
                                           "Question = @Question, " +
                                           "Choices = @Choices, " +
                                           "Correct = @Correct," +
-                                          "ExamId = @ExamId " +
+                                          "ExamId = @ExamId, " +
                                           "Points = @Points " +
                                           "WHERE Id = @Id";
                     SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
@@ -135,7 +140,7 @@ namespace OnlineTestApp.Services
                     updateCommand.Parameters.AddWithValue("@Points", questionToUpdate.Points);
 
 
-                    int roesAffected = updateCommand.ExecuteNonQuery();
+                    int roesAffected = updateCommand.ExecuteNonQuery(); //heres the problem
                     if (roesAffected > 0)
                         isUpdated = true;
 
