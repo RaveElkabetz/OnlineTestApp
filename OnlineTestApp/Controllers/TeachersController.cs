@@ -28,19 +28,30 @@ namespace OnlineTestApp.Controllers
             return teachers;
         }*/
 
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
-            TeacherModel teacherFound = teacherRepository.GetTeacherById(id);
-            if (teacherFound != null)
-                return Ok(teacherFound);
-            else
-                return NotFound(id);
+      // GET api/<ValuesController>/5
+       [HttpGet("{id}")]
+       public IActionResult Get(int id)
+       {
+           TeacherModel teacherFound = teacherRepository.GetTeacherById(id);
+           if (teacherFound != null)
+               return Ok(teacherFound);
+           else
+               return NotFound(id);
+      
+       }
 
-        }
+    //    [HttpGet("{Email}")]        //fix this!! its sent literally
+    //    public IActionResult Get(string email)
+    //    {
+    //        TeacherModel teacherFound = teacherRepository.GetTeacherByEmail(email);
+    //        if (teacherFound != null)
+    //            return Ok(teacherFound);
+    //        else
+    //            return NotFound(email);
+    //
+    //    }
 
-    
+        //יש שני נתיבים לGET
         // POST: TeachersController/Create
         [HttpPost]
        

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OnlineTestApp.Models
 {
-    public class StudentModel
+    public class StudentModel 
     {
         public StudentModel()
         {

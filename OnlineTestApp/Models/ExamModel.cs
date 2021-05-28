@@ -19,7 +19,7 @@ namespace OnlineTestApp.Models
 
         public int TeacherId { get; set; }
 
-        public DateTime DateStarted { get; set; }
+        public DateTime DateOfTest { get; set; }
 
         public int DurationMinutes { get; set; }
 

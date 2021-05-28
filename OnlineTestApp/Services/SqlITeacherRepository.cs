@@ -76,11 +76,13 @@ namespace OnlineTestApp.Services
                     connection.Open();
 
       
-                    string addTeacher = "INSERT INTO Teachers (Name, DateStarted)" +
-                                     " VALUES (@Name,@DateStarted); " +
+                    string addTeacher = "INSERT INTO Teachers (Name, Password, Email, DateStartedWorking)" +
+                                     " VALUES (@Name, @Password, @Email, @DateStartedWorking); " +
                                      "SELECT SCOPE_IDENTITY()";
                     SqlCommand addCommand = new SqlCommand(addTeacher, connection);
                     addCommand.Parameters.AddWithValue("@Name", newTeacher.Name);
+                    addCommand.Parameters.AddWithValue("@Password", newTeacher.Password);
+                    addCommand.Parameters.AddWithValue("@Email", newTeacher.Email);
                     addCommand.Parameters.AddWithValue("@DateStartedWorking", newTeacher.DateStartedWorking);
                     newId = Convert.ToInt32(addCommand.ExecuteScalar());
 
@@ -124,7 +126,9 @@ namespace OnlineTestApp.Services
                         teacherModel = new TeacherModel();
                         teacherModel.Id = reader.GetInt32(0);
                         teacherModel.Name = reader.GetString(1);
-                        teacherModel.DateStartedWorking = reader.GetDateTime(2);
+                        teacherModel.Password = reader.GetString(2);
+                        teacherModel.Email = reader.GetString(3);
+                        teacherModel.DateStartedWorking = reader.GetDateTime(4);
                         
 
                     }
@@ -132,6 +136,39 @@ namespace OnlineTestApp.Services
             }
             return teacherModel;
 
+        }
+
+
+        public TeacherModel GetTeacherByEmail(int Id)
+        {
+            TeacherModel teacherModel = null;
+            using (var connection = new SqlConnection(this.ConnectionString))
+            {
+
+
+                connection.Open();
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM Teachers WHERE Id =" + Id.ToString(), connection);
+
+
+
+                using (var reader = allCommand.ExecuteReader())
+                {
+
+                    //Read ROW BY ROW
+                    while (reader.Read())
+                    {
+                        teacherModel = new TeacherModel();
+                        teacherModel.Id = reader.GetInt32(0);
+                        teacherModel.Name = reader.GetString(1);
+                        teacherModel.Password = reader.GetString(2);
+                        teacherModel.Email = reader.GetString(3);
+                        teacherModel.DateStartedWorking = reader.GetDateTime(4);
+
+
+                    }
+                }
+            }
+            return teacherModel;
         }
         public bool UpdateTeacher(TeacherModel teacherToUpdate)
         {
@@ -146,11 +183,14 @@ namespace OnlineTestApp.Services
                     connection.Open();
                     string updateQuery = "UPDATE Teachers SET " +
                                           "Name = '@Name', " +
+                                          "Password = '@Password',"+
                                           "DateStartedWorking = @DateStartedWorking, " +
                                           "WHERE Id = @Id";
                     SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
                     updateCommand.Parameters.AddWithValue("@Id", teacherToUpdate.Id);
                     updateCommand.Parameters.AddWithValue("@Name", teacherToUpdate.Name);
+                    updateCommand.Parameters.AddWithValue("@Password", teacherToUpdate.Password);
+                    updateCommand.Parameters.AddWithValue("@Email", teacherToUpdate.Email);
                     updateCommand.Parameters.AddWithValue("@DateStartedWorking", teacherToUpdate.DateStartedWorking);
 
 

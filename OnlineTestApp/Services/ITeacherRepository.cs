@@ -22,6 +22,8 @@ namespace OnlineTestApp.Services
 
         public TeacherModel GetTeacherById(int ID);
 
+        //public TeacherModel GetTeacherByEmail(string email);
+
         public bool DeleteTeacher(int ID);
 
         public int AddNewTeacher(TeacherModel newTeacher);

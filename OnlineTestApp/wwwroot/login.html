@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Test App</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" ></script>
+    <script src="login.js" defer></script>
+    
+</head>
+<body>
+    <section id="login">
+      
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
+              <!-- App Header -->
+            <div>
+                <h1>Online Test App</h1>
+            </div>
+              <!-- Tabs Titles -->
+              <h2 class=" underlineHover" v-bind:class="{active : StudentMode, 'inactive underlineHover': TeacherMode }" @click="toggelActiveFromStud"> I'm a Student </h2>
+              <h2 class=" underlineHover" v-bind:class="{active: TeacherMode , 'inactive underlineHover': StudentMode }" @click="toggelActiveFromTeacher">I'm a Teacher </h2>
+        
+
+        
+              <!-- Login Form @click.prevent="submitForm"-->
+              <form >
+                <input type="text" v-on:input="setId" id="id" class="fadeIn second" name="login" placeholder="Id" >
+                <input type="password" v-on:input="setPass($event)" id="password" class="fadeIn third" name="login" placeholder="Password">
+                <input type="button" @click.prevent="submitClicked" class="fadeIn fourth" value="Log In">
+                <!--v-on:click="submitForm()"-->
+                
+              </form>
+          
+              <!-- Remind Passowrd -->
+              <!--
+              <div id="formFooter">
+                <a class="underlineHover" href="#">Forgot Password?</a>
+              </div>
+            -->
+    
+        </div>
+      
+      </div>
+    </section>
+</body>
+</html>

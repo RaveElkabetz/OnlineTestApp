@@ -29,13 +29,11 @@ namespace OnlineTestApp.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IEnumerable<ExamModel> Get(int id)
         {
-            ExamModel examFound = examRepository.GetExamById(id);
-            if (examFound != null)
-                return Ok(examFound);
-            else
-                return NotFound(id);
+            var exams = examRepository.GetAllExamByTeacherId(id);
+            return exams;
+       
 
         }
 

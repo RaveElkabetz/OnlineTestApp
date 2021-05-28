@@ -17,6 +17,7 @@ namespace OnlineTestApp
 {
     public class Startup
     {
+        //readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,6 +28,15 @@ namespace OnlineTestApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           // services.AddCors(options =>
+           // {
+           //     options.AddPolicy(name: MyAllowSpecificOrigins,
+           //                       builder =>
+           //                       {
+           //                           builder.WithOrigins("file:///C:/Users/Dell%20xps/source/repos/OnlineTestApp/client/login/login.html"
+           //                                               );
+           //                       });
+           // });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -37,6 +47,7 @@ namespace OnlineTestApp
             //01) DECLARE INTERFACE PER SERVICES
             services.AddSingleton<IExamRepository, SqlExamRepository>();
             services.AddSingleton<IQuestionsRepository, SqlQuestionsRepository>();
+            services.AddSingleton<ITeacherRepository, SqlITeacherRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,15 +55,18 @@ namespace OnlineTestApp
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlineTestApp v1"));
+              app.UseDeveloperExceptionPage();
+              app.UseSwagger();
+              app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlineTestApp v1"));
             }
-
+       
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseFileServer();
+            //--------------------------
+            //app.UseCors(MyAllowSpecificOrigins);
+            //--------------------------
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

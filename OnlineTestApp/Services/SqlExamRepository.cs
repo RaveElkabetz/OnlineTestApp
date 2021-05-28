@@ -43,13 +43,13 @@ namespace OnlineTestApp.Services
                     // string addExam = "INSERT INTO Exams (Title, DateStarted, DurationMinutes ,TeacherId)" +
                     //                  $" VALUES ('{newExam.Title}','{timeText}',{newExam.DurationMinutes},{newExam.TeachrId})";
 
-                    string addExam = "INSERT INTO Exams (Title, DateStarted, DurationMinutes ,TeacherId)" +
-                                     " VALUES (@Title,@DateStarted,@DurationMinutes,@TeacherId); " +
+                    string addExam = "INSERT INTO Exams (Title, DateOfTest, DurationMinutes ,TeacherId)" +
+                                     " VALUES (@Title,@DateOfTest,@DurationMinutes,@TeacherId); " +
                                      "SELECT SCOPE_IDENTITY()";
                     SqlCommand addCommand = new SqlCommand(addExam, connection);
                     //addCommand.Parameters.AddWithValue("@Id", newExam.Id);
                     addCommand.Parameters.AddWithValue("@Title", newExam.Title);
-                    addCommand.Parameters.AddWithValue("@DateStarted", newExam.DateStarted);
+                    addCommand.Parameters.AddWithValue("@DateOfTest", newExam.DateOfTest);
                     addCommand.Parameters.AddWithValue("@DurationMinutes", newExam.DurationMinutes);
                     addCommand.Parameters.AddWithValue("@TeacherId", newExam.TeacherId);
                     newId = Convert.ToInt32(addCommand.ExecuteScalar());
@@ -109,7 +109,7 @@ namespace OnlineTestApp.Services
         public List<ExamModel> GetAllExamByTeacherId(int teacherId)
         {
             ExamModel examModel = null;
-            List<ExamModel> examList = new List<ExamModel>();
+            List<ExamModel> examsList = new List<ExamModel>();
             using (var connection = new SqlConnection(this.ConnectionString))
             {
                 connection.Open();
@@ -121,14 +121,14 @@ namespace OnlineTestApp.Services
                         examModel = new ExamModel();
                         examModel.Id = reader.GetInt32(0);
                         examModel.Title = reader.GetString(1);
-                        examModel.DateStarted = reader.GetDateTime(2);
+                        examModel.DateOfTest = reader.GetDateTime(2);
                         examModel.DurationMinutes = reader.GetInt32(3);
                         examModel.TeacherId = reader.GetInt32(4);
-                        
+                        examsList.Add(examModel);
                     }
                 }
             }
-            return examList;
+            return examsList;
         }
 
         public List<ExamModel> GetAllExamByTitle(string title)
@@ -152,7 +152,7 @@ namespace OnlineTestApp.Services
                             ExamModel examModel = new ExamModel();
                             examModel.Id = reader.GetInt32(0);
                             examModel.Title = reader.GetString(1);
-                            examModel.DateStarted = reader.GetDateTime(2);
+                            examModel.DateOfTest = reader.GetDateTime(2);
                             examModel.DurationMinutes = reader.GetInt32(3);
                             examModel.TeacherId = reader.GetInt32(4);
                             examsList.Add(examModel);
@@ -186,7 +186,7 @@ namespace OnlineTestApp.Services
                         examModel = new ExamModel();
                         examModel.Id = reader.GetInt32(0);
                         examModel.Title = reader.GetString(1);
-                        examModel.DateStarted = reader.GetDateTime(2);
+                        examModel.DateOfTest = reader.GetDateTime(2);
                         examModel.DurationMinutes = reader.GetInt32(3);
                         examModel.TeacherId = reader.GetInt32(4);
 
@@ -216,14 +216,14 @@ namespace OnlineTestApp.Services
                     connection.Open();
                     string updateQuery = "UPDATE Exams SET " +
                                           "Title = '@Title', " +
-                                          "DateStarted = @DateStarted, " +
+                                          "DateOfTest = @DateOfTest, " +
                                           "DurationMinutes = @DurationMinutes," +
                                           "TeacherId = @TeacherId " +
                                           "WHERE Id = @Id";
                     SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
                     updateCommand.Parameters.AddWithValue("@Id", examToUpdate.Id);
                     updateCommand.Parameters.AddWithValue("@Title", examToUpdate.Title);
-                    updateCommand.Parameters.AddWithValue("@DateStarted", examToUpdate.DateStarted);
+                    updateCommand.Parameters.AddWithValue("@DateOfTest", examToUpdate.DateOfTest);
                     updateCommand.Parameters.AddWithValue("@DurationMinutes", examToUpdate.DurationMinutes);
                     updateCommand.Parameters.AddWithValue("@TeacherId", examToUpdate.TeacherId);
                     

@@ -15,6 +15,10 @@ namespace OnlineTestApp.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public string Password { get; set; }
+
+        public string Email { get; set; }
         public DateTime DateStartedWorking { get; set; }
         //public List<string> TeachingTopics { get; set; }
         //public List<ExamModel> UpcommingExams { get; set; }
