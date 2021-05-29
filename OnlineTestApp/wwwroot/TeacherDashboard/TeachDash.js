@@ -61,6 +61,8 @@
                 }
     
             }) 
+
+
     },
     watch:{}
 
@@ -97,6 +99,7 @@ app.component('exam-list-item',{
 
 });
 app.mount('#TeacherDashboard');
+
 //const Home = app.component('exam-list-item')
 
 //console.log(localStorage);
