@@ -6,9 +6,8 @@
             teacherName: "",
             userId: localStorage.Id,
             userPassword: localStorage.password,
-            examsArray: [{
-
-            }]
+            examsArray: [],
+            toggleAddNewTest: false
 
         };
     

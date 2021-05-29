@@ -55,13 +55,13 @@
                                
                             </div>
                               <div class="col-lg-2">
-                                <button type="button" class="btn btn-success">Add new exam</button>
+                                <button v-on:click="toggleAddNewTest=!toggleAddNewTest" type="button" class="btn btn-success">Add new exam</button>
                               </div>
                             </div>
                           </div>
                         
                 
-                      <div   class="container">
+                      <div  v-if="toggleAddNewTest===true" id="add-new-test-div" class="container animated fadeInDown">
                     <hr>
                          
                           <div class="row">
@@ -101,7 +101,7 @@
                         
                         
                          
-                            <button type="button" class="btn btn-warning">Cancel</button>
+                            <button  v-on:click="toggleAddNewTest=!toggleAddNewTest" type="button" class="btn btn-warning">Cancel</button>
                           
                           
                             <button type="button" class="btn btn-success">Submit</button>
