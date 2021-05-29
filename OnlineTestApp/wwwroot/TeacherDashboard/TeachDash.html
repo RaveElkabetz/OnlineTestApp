@@ -38,9 +38,10 @@
                             
                           </div>
                         </div>
-                        <hr>
+                        <hr v-if="!toggleAddNewTest">
 
-                        <div class="container">
+                        <div v-if="!toggleAddNewTest" class="container">
+ 
                             <div class="row">
                               <div class="col-lg-8">
                                 <h3>Hello {{ teacherName }}! those are your Exams:</h3>
@@ -63,7 +64,7 @@
                 
                       <div  v-if="toggleAddNewTest===true" id="add-new-test-div" class="container animated fadeInDown">
                     <hr>
-                         
+                    <div class="jumbotron"><h4>Fill up the details of the new test:</h4></div>
                           <div class="row">
                             <div class="col">
                             <div class="input-group mb-3">
