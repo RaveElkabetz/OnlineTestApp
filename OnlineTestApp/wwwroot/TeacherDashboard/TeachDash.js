@@ -7,12 +7,104 @@
             userId: localStorage.Id,
             userPassword: localStorage.password,
             examsArray: [],
-            toggleAddNewTest: false
+            toggleAddNewTest: false,
+            newExamToSend:{
+                title:"",
+                teacherId: this.userId,
+                dateOfTest: "",
+                durationOfTest: 0,
+                testHour: ""
+            }
 
         };
     
     },
     methods: {
+        submitClickedNewTeacher(){
+            this.newExamToSend.dateOfTest = this.newExamToSend.dateOfTest.slice(0,10);
+            this.newExamToSend.dateOfTest += ("T" + this.newExamToSend.testHour+":00.000Z");
+           
+            fetch('https://localhost:44308/api/Exams',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify( {
+                    title: this.newExamToSend.title,
+                    teacherId: this.userId,
+                    dateOfTest: this.newExamToSend.dateOfTest,
+                    durationOfTest: this.newExamToSend.durationOfTest
+
+                })
+
+            });
+            this.toggleAddNewTest= !this.toggleAddNewTest;
+            console.log(this.newExamToSend);
+            /* fetch(this.teacherUrl + this.userId).then((response) => {
+                if (response.ok){
+                        return response.json();
+                    }
+                })
+                .then((data) =>{
+                    console.log(data);
+                    this.teacherName = data.name;
+                    if (data.password === this.userPassword) {
+                        console.log("password match!");
+                        //now need to show all his exams: GET all exam by teacher id-
+                        fetch(this.examsUrl + this.userId).then((response) => {
+                            if (response.ok){
+                                    return response.json();
+                                }
+                            })
+                            .then((data) =>{
+                                
+                                
+                                var examTemp={
+                                    id: "",
+                                    title: "",
+                                    teacherId: "",
+                                    dateOfTest: ""
+                                }
+                                var i = 0;
+                                this.examsArray.push.apply(this.examsArray, data);
+                                this.examsArray.shift();
+    
+                                //console.log("new-logs-down");
+                                //console.log(this.examsArray);
+                                console.log("fetched new list");
+    
+                                
+    
+    
+                    
+                            }) 
+                        
+                    }
+        
+                })  */
+
+        },
+        setDateOfTest(event){
+            
+            this.newExamToSend.dateOfTest = event.target.value;
+            
+        },
+        setTimeOfTest(event){
+            console.log(this.newExamToSend.dateOfTest);
+            
+            this.newExamToSend.testHour = event.target.value ;
+            
+        },
+        setTitleOfTest(event){
+            this.newExamToSend.title = event.target.value;
+        },
+        setTeacherIdOfTest(event){
+            this.newExamToSend.teacherId = event.target.value;
+        },
+        setDurationOfTest(event){
+            this.newExamToSend.durationOfTest = event.target.value;
+        }
+
 
 
 
