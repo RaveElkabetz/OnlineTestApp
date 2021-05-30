@@ -53,7 +53,7 @@
                                 }
                                 var i = 0;
                                 this.examsArray.push.apply(this.examsArray, data);
-                                this.examsArray.shift();
+                                //this.examsArray.shift();
     
                                 console.log("new-logs-down");
                                 console.log(this.examsArray);
@@ -75,7 +75,7 @@
             this.newExamToSend.dateOfTest = this.newExamToSend.dateOfTest.slice(0,10);
             this.newExamToSend.dateOfTest += ("T" + this.newExamToSend.testHour+":00.000Z");
            
-            fetch('https://localhost:44308/api/Exams',{
+            fetch(this.examsUrl,{
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json'
@@ -90,50 +90,10 @@
 
             });
             this.toggleAddNewTest= !this.toggleAddNewTest;
-            console.log(this.newExamToSend);
             this.examsArray = [];
-             fetch(this.teacherUrl + this.userId).then((response) => {
-                if (response.ok){
-                        return response.json();
-                    }
-                })
-                .then((data) =>{
-                    console.log(data);
-                    this.teacherName = data.name;
-                    if (data.password === this.userPassword) {
-                        console.log("password match!");
-                        //now need to show all his exams: GET all exam by teacher id-
-                        fetch(this.examsUrl + this.userId).then((response) => {
-                            if (response.ok){
-                                    return response.json();
-                                }
-                            })
-                            .then((data) =>{
-                                
-                                
-                                var examTemp={
-                                    id: "",
-                                    title: "",
-                                    teacherId: "",
-                                    dateOfTest: ""
-                                }
-                                var i = 0;
-                                this.examsArray.push.apply(this.examsArray, data);
-                                this.examsArray.shift();
+             
+            this.init();
     
-                                //console.log("new-logs-down");
-                                //console.log(this.examsArray);
-                                console.log("fetched new list");
-    
-                                
-    
-    
-                    
-                            }) 
-                        
-                    }
-        
-                })  
 
         },
         setDateOfTest(event){
@@ -166,7 +126,13 @@
 
 
     },
-    watch:{}
+    watch:{
+        examsArray(){
+            if(this.examsArray[0]){
+                this.toggleAddNewTest = true;
+            }
+        }
+    }
 
 
 
@@ -188,7 +154,7 @@ app.component('exam-list-item',{
     </div>
     <div class="d-flex flex-row align-items-center">
         <div class="d-flex flex-column mr-2">
-            <div class="profile-image"> <button type="button" class="btn btn-outline-secondary"><img class="" src="/icons/edit-2.png" width="35"></button> <button v-on:click="deleteThisTest" type="button" class="btn btn-outline-danger"><img class="" src="/icons/delete-2.png" width="35"></button></div>
+            <div class="profile-image"> <button v-on:click="enterToEditExamWindow" type="button" class="btn btn-outline-secondary"><img class="" src="/icons/edit-2.png" width="35"></button> <button v-on:click="deleteThisTest" type="button" class="btn btn-outline-danger"><img class="" src="/icons/delete-2.png" width="35"></button></div>
         </div> <i class="fa fa-ellipsis-h"></i>
     </div>
 </li>`,
@@ -206,15 +172,19 @@ app.component('exam-list-item',{
                 })
                 .then(res => res.text()) // or res.json()
                 .then(res => console.log(res));
-            this.examsArray = [];    
-            this.$root.init();
+            console.log("before del");
+            console.log(this.$root.examsArray); 
+            this.$root.examsArray = [];  
+            console.log("after del");
+            console.log(this.$root.examsArray);  
+            console.log("arrived to init in delete");
+            this.$root.init();           
+        },
+        enterToEditExamWindow(){
+            localStorage.currentExamId = this.exam.id;
+            localStorage.currentExamTitle = this.exam.title;
+            window.location.href = 'https://localhost:44308/TeacherDashboard/TeachExamEdit.html';
             
-
-
-                           
-                       
-           
-                    
 
         }
     }
