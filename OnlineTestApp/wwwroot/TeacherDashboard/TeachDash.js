@@ -20,6 +20,57 @@
     
     },
     methods: {
+        logToConsole(){
+            console.log("printed from the main app");
+        }
+        ,
+
+        init(){
+            fetch(this.teacherUrl + this.userId).then((response) => {
+                if (response.ok){
+                        return response.json();
+                    }
+                })
+                .then((data) =>{
+                    console.log(data);
+                    this.teacherName = data.name;
+                    if (data.password === this.userPassword) {
+                        console.log("password match!");
+                        //now need to show all his exams: GET all exam by teacher id-
+                        fetch(this.examsUrl + this.userId).then((response) => {
+                            if (response.ok){
+                                    return response.json();
+                                }
+                            })
+                            .then((data) =>{
+                                
+                                
+                                var examTemp={
+                                    id: "",
+                                    title: "",
+                                    teacherId: "",
+                                    dateOfTest: ""
+                                }
+                                var i = 0;
+                                this.examsArray.push.apply(this.examsArray, data);
+                                this.examsArray.shift();
+    
+                                console.log("new-logs-down");
+                                console.log(this.examsArray);
+                                console.log(data);
+    
+                                
+    
+    
+                    
+                            }) 
+                        
+                    }
+        
+                }) 
+    
+
+        },
         submitClickedNewTeacher(){
             this.newExamToSend.dateOfTest = this.newExamToSend.dateOfTest.slice(0,10);
             this.newExamToSend.dateOfTest += ("T" + this.newExamToSend.testHour+":00.000Z");
@@ -40,7 +91,8 @@
             });
             this.toggleAddNewTest= !this.toggleAddNewTest;
             console.log(this.newExamToSend);
-            /* fetch(this.teacherUrl + this.userId).then((response) => {
+            this.examsArray = [];
+             fetch(this.teacherUrl + this.userId).then((response) => {
                 if (response.ok){
                         return response.json();
                     }
@@ -81,7 +133,7 @@
                         
                     }
         
-                })  */
+                })  
 
         },
         setDateOfTest(event){
@@ -110,48 +162,7 @@
 
     },
     mounted(){
-        fetch(this.teacherUrl + this.userId).then((response) => {
-            if (response.ok){
-                    return response.json();
-                }
-            })
-            .then((data) =>{
-                console.log(data);
-                this.teacherName = data.name;
-                if (data.password === this.userPassword) {
-                    console.log("password match!");
-                    //now need to show all his exams: GET all exam by teacher id-
-                    fetch(this.examsUrl + this.userId).then((response) => {
-                        if (response.ok){
-                                return response.json();
-                            }
-                        })
-                        .then((data) =>{
-                            
-                            
-                            var examTemp={
-                                id: "",
-                                title: "",
-                                teacherId: "",
-                                dateOfTest: ""
-                            }
-                            var i = 0;
-                            this.examsArray.push.apply(this.examsArray, data);
-                            this.examsArray.shift();
-
-                            console.log("new-logs-down");
-                            console.log(this.examsArray);
-                            console.log(data);
-
-                            
-
-
-                
-                        }) 
-                    
-                }
-    
-            }) 
+        this.init();
 
 
     },
@@ -177,7 +188,7 @@ app.component('exam-list-item',{
     </div>
     <div class="d-flex flex-row align-items-center">
         <div class="d-flex flex-column mr-2">
-            <div class="profile-image"> <button type="button" class="btn btn-outline-secondary"><img class="" src="/icons/edit-2.png" width="35"></button> <button type="button" class="btn btn-outline-danger"><img class="" src="/icons/delete-2.png" width="35"></button></div>
+            <div class="profile-image"> <button type="button" class="btn btn-outline-secondary"><img class="" src="/icons/edit-2.png" width="35"></button> <button v-on:click="deleteThisTest" type="button" class="btn btn-outline-danger"><img class="" src="/icons/delete-2.png" width="35"></button></div>
         </div> <i class="fa fa-ellipsis-h"></i>
     </div>
 </li>`,
@@ -186,7 +197,27 @@ app.component('exam-list-item',{
 
         }
     },
-    methods:{}
+    methods:{
+        deleteThisTest(){
+            console.log(this.exam);
+            const id = this.exam.id;
+            fetch('https://localhost:44308/api/Exams/' + id, {
+                method: 'DELETE',
+                })
+                .then(res => res.text()) // or res.json()
+                .then(res => console.log(res));
+            this.examsArray = [];    
+            this.$root.init();
+            
+
+
+                           
+                       
+           
+                    
+
+        }
+    }
 
 });
 app.mount('#TeacherDashboard');
