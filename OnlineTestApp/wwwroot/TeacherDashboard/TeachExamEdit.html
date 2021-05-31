@@ -7,12 +7,14 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
+    <script src="https://unpkg.com/vue@next" ></script>
+    <script src="TeachExamEdit.js" defer></script>
+    <link rel="stylesheet" href="TeachDash.css" />
     <title>Hello, world!</title>
   </head>
   <body>
-    <div class="container mt-5">
-      <div class="container ">
+    <div class="container mt-5" id="exam-edit-page">
+      <div class="container view-question">
       <div class="card question-card shadow" style="width: 55rem;">
         <div class="jumbotron ">
             <div class="container">
@@ -53,7 +55,7 @@
               <hr>
               <div class="container">
               <div class="row">
-                  <div class="col"><a class="btn btn-warning btn-lg" href="#" role="button">edit</a></div>
+                  <div class="col"><a class="btn btn-warning btn-lg shadow" href="#" role="button">edit</a></div>
                   
               </div>
             </div>
@@ -106,8 +108,8 @@
             <hr>
             <div class="container">
             <div class="row">
-                <div class="col-1"><a class="btn btn-success btn-lg" href="#" role="button">Add</a></div>
-                <div class="col-1"><a class="btn btn-warning btn-lg" href="#" role="button">Clear</a></div>
+                <div class="col-1 shadow"><a class="btn btn-success btn-lg" href="#" role="button">Add</a></div>
+                <div class="col-1 shadow"><a class="btn btn-warning btn-lg" href="#" role="button">Clear</a></div>
                 <div class="col-10"></div>
             </div>
           </div>

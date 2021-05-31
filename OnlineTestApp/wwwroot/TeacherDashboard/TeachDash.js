@@ -183,6 +183,8 @@ app.component('exam-list-item',{
         enterToEditExamWindow(){
             localStorage.currentExamId = this.exam.id;
             localStorage.currentExamTitle = this.exam.title;
+            localStorage.currentUserId = this.exam.teacherId;
+            
             window.location.href = 'https://localhost:44308/TeacherDashboard/TeachExamEdit.html';
             
 

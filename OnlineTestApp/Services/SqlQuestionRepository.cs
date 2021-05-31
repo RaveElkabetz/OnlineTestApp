@@ -54,9 +54,9 @@ namespace OnlineTestApp.Services
                                      " VALUES (@Question,@Choices,@Correct,@ExamId,@Points); " +
                                      "SELECT SCOPE_IDENTITY()";
                     SqlCommand addCommand = new SqlCommand(addQuestion, connection);
-                    addCommand.Parameters.AddWithValue("@Question", newQuestion.Question);
-                    addCommand.Parameters.AddWithValue("@Choices", newQuestion.Choices);
-                    addCommand.Parameters.AddWithValue("@Correct", newQuestion.Correct);
+                    addCommand.Parameters.AddWithValue("@Question", newQuestion.Question.Trim());
+                    addCommand.Parameters.AddWithValue("@Choices", newQuestion.Choices.Trim());
+                    addCommand.Parameters.AddWithValue("@Correct", newQuestion.Correct.Trim());
                     addCommand.Parameters.AddWithValue("@ExamId", newQuestion.ExamId);
                     addCommand.Parameters.AddWithValue("@Points", newQuestion.Points);
                     
@@ -133,9 +133,9 @@ namespace OnlineTestApp.Services
                                           "WHERE Id = @Id";
                     SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
                     updateCommand.Parameters.AddWithValue("@Id", questionToUpdate.Id);
-                    updateCommand.Parameters.AddWithValue("@Question", questionToUpdate.Question);
-                    updateCommand.Parameters.AddWithValue("@Choices", questionToUpdate.Choices);
-                    updateCommand.Parameters.AddWithValue("@Correct", questionToUpdate.Correct);
+                    updateCommand.Parameters.AddWithValue("@Question", questionToUpdate.Question.Trim());
+                    updateCommand.Parameters.AddWithValue("@Choices", questionToUpdate.Choices.Trim());
+                    updateCommand.Parameters.AddWithValue("@Correct", questionToUpdate.Correct.Trim());
                     updateCommand.Parameters.AddWithValue("@ExamId", questionToUpdate.ExamId);
                     updateCommand.Parameters.AddWithValue("@Points", questionToUpdate.Points);
 
