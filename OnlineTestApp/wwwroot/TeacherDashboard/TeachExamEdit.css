@@ -6,3 +6,6 @@
 body {
     background: #c9cecb
 }
+ul.ba{
+    list-style-type: none;
+}
