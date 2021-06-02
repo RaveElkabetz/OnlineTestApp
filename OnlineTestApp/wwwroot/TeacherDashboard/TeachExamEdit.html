@@ -21,7 +21,9 @@
     <div class="card question-card shadow" style="width: 55rem;">
       <div class="jumbotron ">
           <div class="container">
-              <h1 class="display-4">Enter a new question:</h1>
+            <h1 class="display-4" v-if="addNewQuestionState">Enter a new question:</h1>
+            <h1 class="display-4" v-if="editState">Edit the selected({{whichQuestionToEdit+1}}) question:</h1>
+            
               <div class="container">
                 <div class="row">
                    <div class="col-10">

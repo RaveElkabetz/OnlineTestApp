@@ -14,6 +14,17 @@ const app = Vue.createApp({
             secondQuestionToAdd:"",
             thirdQuestionToAdd:"",
             fourthQuestionToAdd:"",
+            //-----
+            firstAnswerToEdit:"",
+            secondAnswerToEdit:"",
+            thirdAnswerToEdit:"",
+            fourthAnswerToEdit:"",
+            //----
+            
+            questionIdToEdit: -1,
+            whichQuestionToEdit: -1,
+            editState : false,
+            addNewQuestionState: true,
             questionArray: [
  
             ],
@@ -25,6 +36,14 @@ const app = Vue.createApp({
                 correct: "",
                 points: 0,
                 examId: 2010
+            },
+
+            questionToEdit:{
+                question: "",
+                choices: "",
+                correct: "",
+                points: 0,
+                examId: 0
             }
 
         };
@@ -71,6 +90,10 @@ const app = Vue.createApp({
         },
         submitNewQuestion()
         {
+            if(this.editState){
+                //fetch UPDATE to server
+                //return;
+            }
             console.log("entered to submitNewQuestion");
             this.assembleTheAnswers();
            
@@ -198,6 +221,20 @@ app.component('question-list-item',{
     methods:{
         editThisQuestion(){
             window.scrollTo(0, 0);
+            this.$root.whichQuestionToEdit=this.indx;
+            this.$root.questionIdToEdit= this.question.id;
+            this.$root.editState = true;
+            this.$root.addNewQuestionState= false;
+            this.$root.questionToEdit = this.question;
+            console.log(this.$root.questionToEdit);
+            this.$root.newQuestionToSend.question = this.question.question;
+            this.$root.firstQuestionToAdd = this.firstQuestion;
+            this.$root.secondQuestionToAdd = this.secondQuestion;
+            this.$root.thirdQuestionToAdd = this.thirdQuestion;
+            this.$root.fourthQuestionToAdd = this.fourthQuestion;
+            this.$root.newQuestionToSend.score = this.points;
+
+
         },
         unssembleTheAnswers(){
             var pos = 0;
