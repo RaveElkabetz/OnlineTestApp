@@ -16,6 +16,7 @@ namespace OnlineTestApp.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateStartedLearning { get; set; }
+        public string examsIdList { get; set; }   //exams id separeted by ";"
 
 
 

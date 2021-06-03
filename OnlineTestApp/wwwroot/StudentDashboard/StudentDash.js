@@ -1,7 +1,7 @@
 ﻿const app = Vue.createApp({
     data() {
         return {
-            teacherUrl: "https://localhost:44308/api/Students/",
+            teacherUrl: "https://localhost:44308/api/Teachers/",
             examsUrl: "https://localhost:44308/api/Exams/",
             teacherName: "",
             userId: localStorage.Id,
@@ -193,7 +193,7 @@ app.component('exam-list-item',{
     }
 
 });
-app.mount('#StudentDashboard');
+app.mount('#TeacherDashboard');
 
 //const Home = app.component('exam-list-item')
 
