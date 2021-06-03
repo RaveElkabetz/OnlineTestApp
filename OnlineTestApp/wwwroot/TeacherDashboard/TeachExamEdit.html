@@ -12,17 +12,39 @@
     <link rel="stylesheet" href="TeachDash.css" />
     <title>Exam edit</title>
   </head>
-  <body>
-    <div class="container mt-5" id="exam-edit-page">
+  <body id="exam-edit-page">
+    <nav class="navbar navbar-light fixed-top bg-light">
+      <div class="container-fluid">
+        
+        <a class="navbar-brand" href="#">
+          <img src="https://icon-library.com/images/flat-edit-icon/flat-edit-icon-0.jpg" alt="" width="33" height="33" class="d-inline-block align-text-top">
+          Online Exam App - Teacher Mode
+        </a>
+
+
+
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio"  class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"  checked v-on:change="switchModes">
+          <label class="btn btn-outline-success"  for="btnradio1">Edit Exam</label>
+        
+          <input type="radio"  class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"  v-on:change="switchModes" >
+          <label class="btn btn-outline-success"  for="btnradio3">Show Grades</label>
+          
+        </div>
+      </div>
+    </nav>
+    <p>&ensp;</p>
+    <p>&ensp;</p>
+    <div class="container mt-5" >
       <!--enter new question section-->
 
 
-<div class="container mt-5" id="add-new-question">
+<div class="container mt-5" v-if="editExamMode" id="add-new-question">
     <div class="card question-card shadow" style="width: 55rem;">
       <div class="jumbotron ">
           <div class="container">
             <h1 class="display-4" v-if="addNewQuestionState">Enter a new question:</h1>
-            <h1 class="display-4" v-if="editState">Edit the selected({{whichQuestionToEdit+1}}) question:</h1>
+            <h1 class="display-4" v-if="editState">Edit the selected question({{whichQuestionToEdit+1}}):</h1>
             
               <div class="container">
                 <div class="row">
@@ -72,8 +94,11 @@
             <div class="container">
             <div class="row">
                 <div class="col-1  mb-4"><a class="btn btn-success btn-lg" v-on:click="submitNewQuestion" href="#" role="button">Add</a></div>
-                <div class="col-1  mb-4"><a class="btn btn-warning btn-lg" href="#" role="button">Clear</a></div>
-                <div class="col-10"></div>
+                <div class="col-1  mb-4"><a class="btn btn-warning btn-lg" v-on:click="clearEditOrNewFields" href="#" role="button">Clear</a></div>
+                <div class="col-1"></div>
+                <div class="col-7"></div>
+                <div class="col-2  mb-4 ml-1"><a class="btn btn-danger btn-lg" v-if:="editState" v-on:click="switchToAddNewQuestionState" href="#" role="button">Cancel</a></div>
+                
             </div>
 
           </div>
@@ -87,7 +112,7 @@
 
 
   <!--list of question added-->
-  <div class="mt-3">
+  <div class="mt-3" v-if="editExamMode">
     <ul >
       
        <question-list-item

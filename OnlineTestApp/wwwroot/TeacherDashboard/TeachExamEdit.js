@@ -10,6 +10,9 @@ const app = Vue.createApp({
             userPassword: localStorage.password,
             examId: localStorage.currentExamId,
             examTitle: localStorage.currentExamTitle,
+            editExamMode: true,
+            showGradesMode: false,
+            //switchModes: null,
             firstQuestionToAdd:"",
             secondQuestionToAdd:"",
             thirdQuestionToAdd:"",
@@ -35,7 +38,7 @@ const app = Vue.createApp({
                 choices: "",
                 correct: "",
                 points: 0,
-                examId: 2010
+                examId: 0
             },
 
             questionToEdit:{
@@ -51,6 +54,7 @@ const app = Vue.createApp({
     },
     methods: {
         init(){
+            this.examId = localStorage.currentExamId;
             fetch(this.teacherUrl + this.userId).then((response) => {
                 if (response.ok){
                         return response.json();
@@ -62,6 +66,7 @@ const app = Vue.createApp({
                     if (data.password === this.userPassword) {
                         console.log("password match!");
                         //now need to show all his exams: GET all exam by teacher id-
+                        console.log("trying to fetch exam num "+this.examId+" "+this.examTitle);
                         fetch(this.questionUrl + this.examId).then((response) => {
                             if (response.ok){
                                     return response.json();
@@ -75,7 +80,7 @@ const app = Vue.createApp({
                                 console.log(this.questionArray);
                                 console.log("question array from data");
                                 console.log(data);
-                                console.log("new");
+
     
                                 
     
@@ -86,6 +91,57 @@ const app = Vue.createApp({
                     }
         
                 }) 
+
+        },
+        /*switchModes(){
+            this.editExamMode = !this.editExamMode;
+            this.showGradesMode = !this.showGradesMode;
+            console.log("exam:"+this.editExamMode+" grades:"+this.showGradesMode);
+
+        },*/
+        submitEditThisQuestion(){
+            //this.clearEditOrNewFields();
+ 
+        },
+        switchToExamMode(){
+            this.editExamMode=false;
+            this.showGradesMode=true;
+            
+        },
+        switchToGradesMode(){
+            this.showGradesMode=false;
+            this.editExamMode = true;
+            
+        },
+        switchModes(){
+            
+            
+            if (this.editExamMode && !this.showGradesMode) {
+                this.switchToExamMode();
+                return;
+            }
+            if(!this.editExamMode && this.showGradesMode){
+                this.switchToGradesMode();
+                return;
+            }
+        },
+        switchToAddNewQuestionState(){
+            console.log("switched to add new mode");
+            this.clearEditOrNewFields();
+            this.editState = false;
+            this.addNewQuestionState = true;
+        },
+        clearEditOrNewFields(){
+            this.firstQuestionToAdd = "";
+            this.secondQuestionToAdd = "";
+            this.thirdQuestionToAdd = "";
+            this.fourthQuestionToAdd = "";
+
+            this.newQuestionToSend.score = 0;
+            this.newQuestionToSend.question="";
+            
+
+
 
         },
         submitNewQuestion()
@@ -107,7 +163,7 @@ const app = Vue.createApp({
                     choices: this.newQuestionToSend.choices,
                     correct: this.newQuestionToSend.correct,
                     points: this.newQuestionToSend.points,
-                    examId: this.newQuestionToSend.examId
+                    examId: this.examId
 
                 })
 
@@ -137,8 +193,9 @@ const app = Vue.createApp({
     },
     watch:{
         firstQuestion(){
-            console.log(this.firstQuestion);
+            
         }
+    
     }
 
 
@@ -158,7 +215,7 @@ app.component('question-list-item',{
       <div class=" ">
           <div class="container">
               <h1 class="display-4">Question {{ indx+1 }}</h1>
-              <p class="lead">{{ question.question }}  {{ question.choices }}?</p>
+              <p class="lead">{{ question.question }}</p>
           </div>
           <hr class="my-4">
           <div class="container">
@@ -219,6 +276,7 @@ app.component('question-list-item',{
         }
     },
     methods:{
+
         editThisQuestion(){
             window.scrollTo(0, 0);
             this.$root.whichQuestionToEdit=this.indx;
@@ -226,7 +284,7 @@ app.component('question-list-item',{
             this.$root.editState = true;
             this.$root.addNewQuestionState= false;
             this.$root.questionToEdit = this.question;
-            console.log(this.$root.questionToEdit);
+            
             this.$root.newQuestionToSend.question = this.question.question;
             this.$root.firstQuestionToAdd = this.firstQuestion;
             this.$root.secondQuestionToAdd = this.secondQuestion;
@@ -249,7 +307,7 @@ app.component('question-list-item',{
                 if(i===2) this.thirdQuestion = tempStr.slice(0,pos);
                 if(i===3) this.fourthQuestion = tempStr.slice(0,tempStr.length);
                 tempStr = tempStr.slice(pos+1,tempStr.length)
-                console.log(tempStr);
+                
                 
                
                 //t=pos+2;                
@@ -266,12 +324,9 @@ app.component('question-list-item',{
                 })
                 .then(res => res.text()) // or res.json()
                 .then(res => console.log(res));
-            console.log("before del");
-            console.log(this.$root.questionArray); 
+             
             this.$root.questionArray = [];  
-            console.log("after del");
-            console.log(this.$root.questionArray);  
-            console.log("arrived to init in delete");
+
             this.$root.init();           
         },
         enterToEditExamWindow(){
@@ -285,11 +340,12 @@ app.component('question-list-item',{
         }
     },
     mounted(){
-        console.log("created works"+this.question.question);
+       // console.log("created works"+this.question.question);
         this.unssembleTheAnswers();
     }
 
 });
 
 app.mount('#exam-edit-page');
+console.log(app);
 

@@ -92,7 +92,8 @@
             this.toggleAddNewTest= !this.toggleAddNewTest;
             this.examsArray = [];
              
-            this.$root.init();
+            this.init();
+            console.log("init after adding");
     
 
         },
