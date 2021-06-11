@@ -1,7 +1,7 @@
 ﻿const app = Vue.createApp({
     data() {
         return {
-            teacherUrl: "https://localhost:44308/api/Students/",
+            teacherUrl: "https://localhost:44308/api/Teachers/",
             examsUrl: "https://localhost:44308/api/Exams/",
             teacherName: "",
             userId: localStorage.Id,
@@ -26,7 +26,10 @@
         ,
 
         init(){
+            
+            console.log(localStorage);
             fetch(this.teacherUrl + this.userId).then((response) => {
+                
                 if (response.ok){
                         return response.json();
                     }
@@ -185,6 +188,8 @@ app.component('exam-list-item',{
             localStorage.currentExamId = this.exam.id;
             localStorage.currentExamTitle = this.exam.title;
             localStorage.currentUserId = this.exam.teacherId;
+            localStorage.currentExamDate = this.exam.dateOfTest;
+            localStorage.currentExam = this.exam;
             
             window.location.href = 'https://localhost:44308/TeacherDashboard/TeachExamEdit.html';
             
@@ -193,7 +198,7 @@ app.component('exam-list-item',{
     }
 
 });
-app.mount('#StudentDashboard');
+app.mount('#TeacherDashboard');
 
 //const Home = app.component('exam-list-item')
 

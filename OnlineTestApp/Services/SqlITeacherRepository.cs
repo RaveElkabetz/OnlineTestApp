@@ -182,8 +182,8 @@ namespace OnlineTestApp.Services
                     //02 open connection
                     connection.Open();
                     string updateQuery = "UPDATE Teachers SET " +
-                                          "Name = '@Name', " +
-                                          "Password = '@Password',"+
+                                          "Name = @Name, " +
+                                          "Password = @Password,"+
                                           "DateStartedWorking = @DateStartedWorking, " +
                                           "WHERE Id = @Id";
                     SqlCommand updateCommand = new SqlCommand(updateQuery, connection);

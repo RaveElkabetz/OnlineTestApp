@@ -5,13 +5,16 @@ const app = Vue.createApp({
             teacherUrl: "https://localhost:44308/api/Teachers/",
             examsUrl: "https://localhost:44308/api/Exams/",
             questionUrl: "https://localhost:44308/api/Question/",
+            examInstancesUrl: "https://localhost:44308/api/ExamInstance/",
             teacherName: "",
             userId: localStorage.currentUserId,
             userPassword: localStorage.password,
             examId: localStorage.currentExamId,
             examTitle: localStorage.currentExamTitle,
+            examDate: localStorage.currentExamDate,
             editExamMode: true,
             showGradesMode: false,
+            isTheCurrentExmaHasStarted: false,
             //switchModes: null,
             firstQuestionToAdd:"",
             secondQuestionToAdd:"",
@@ -28,6 +31,7 @@ const app = Vue.createApp({
             whichQuestionToEdit: -1,
             editState : false,
             addNewQuestionState: true,
+            examsInstancesArray:[],
             questionArray: [
  
             ],
@@ -54,6 +58,11 @@ const app = Vue.createApp({
     },
     methods: {
         init(){
+            //formating the date->
+
+
+
+            console.log(localStorage);
             this.examId = localStorage.currentExamId;
             fetch(this.teacherUrl + this.userId).then((response) => {
                 if (response.ok){
@@ -103,12 +112,85 @@ const app = Vue.createApp({
             //this.clearEditOrNewFields();
  
         },
-        switchToExamMode(){
+        dateInPast(firstDate, secondDate) {
+            if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
+              return true;
+            }
+          
+            return false;
+          },
+        switchBackToGradesMode(){
             this.editExamMode=false;
             this.showGradesMode=true;
+
+ //+=================================================
+            var myDate = localStorage.currentExamDate;
+            myDate = myDate.substring(0, myDate.length-3);
+            
+            const testDate = new Date(myDate);
+            console.log("below is the date");
+            console.log(testDate);
+            var newDate = testDate.toString();
+            newDate= newDate.substring(0,21);
+            console.log(newDate);
+            this.examDate = newDate;
+
+            var today = new Date();
+            this.isTheCurrentExmaHasStarted = this.dateInPast(testDate,today);
+
+
+
+
+
+
+
+            fetch(this.teacherUrl + this.userId).then((response) => {
+                
+                if (response.ok){
+                        return response.json();
+                    }
+                })
+                .then((data) =>{
+                    console.log(data);
+                    this.teacherName = data.name;
+                    if (data.password === this.userPassword) {
+                        console.log("password match!");
+                        //now need to show all his exams: GET all exam by teacher id-
+                        fetch(this.examInstancesUrl + this.userId).then((response) => {// להמשיך מכאן לחבר קומפוננטה אל הציוניפ
+                            if (response.ok){
+                                    return response.json();
+                                }
+                            })
+                            .then((data) =>{
+                                
+                                
+                       
+                                var i = 0;
+                                this.examsInstancesArray.push.apply(this.examsInstancesArray, data);
+                                //this.examsArray.shift();
+    
+                                console.log("new-logs-down");
+                                console.log(this.examsInstancesArray);
+                                console.log(data);
+    
+                                
+    
+    
+                    
+                            }) 
+                        
+                    }
+        
+                }) 
+
             
         },
-        switchToGradesMode(){
+        switchBackToExamMode(){
+
+ 
+
+
+//================================================
             this.showGradesMode=false;
             this.editExamMode = true;
             
@@ -117,11 +199,12 @@ const app = Vue.createApp({
             
             
             if (this.editExamMode && !this.showGradesMode) {
-                this.switchToExamMode();
+                this.switchBackToGradesMode();
                 return;
             }
             if(!this.editExamMode && this.showGradesMode){
-                this.switchToGradesMode();
+                
+                this.switchBackToExamMode();
                 return;
             }
         },

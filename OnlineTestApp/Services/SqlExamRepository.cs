@@ -215,7 +215,8 @@ namespace OnlineTestApp.Services
                     //02 open connection
                     connection.Open();
                     string updateQuery = "UPDATE Exams SET " +
-                                          "Title = '@Title', " +
+                                         
+                                          "Title = @Title, " +
                                           "DateOfTest = @DateOfTest, " +
                                           "DurationMinutes = @DurationMinutes," +
                                           "TeacherId = @TeacherId " +

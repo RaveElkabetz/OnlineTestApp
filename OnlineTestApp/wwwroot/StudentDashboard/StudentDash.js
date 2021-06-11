@@ -71,7 +71,7 @@
     
 
         },
-        submitClickedNewTeacher(){
+        /*submitClickedNewTeacher(){
             this.newExamToSend.dateOfTest = this.newExamToSend.dateOfTest.slice(0,10);
             this.newExamToSend.dateOfTest += ("T" + this.newExamToSend.testHour+":00.000Z");
            
@@ -96,27 +96,9 @@
             console.log("init after adding");
     
 
-        },
-        setDateOfTest(event){
-            
-            this.newExamToSend.dateOfTest = event.target.value;
-            
-        },
-        setTimeOfTest(event){
-            console.log(this.newExamToSend.dateOfTest);
-            
-            this.newExamToSend.testHour = event.target.value ;
-            
-        },
-        setTitleOfTest(event){
-            this.newExamToSend.title = event.target.value;
-        },
-        setTeacherIdOfTest(event){
-            this.newExamToSend.teacherId = event.target.value;
-        },
-        setDurationOfTest(event){
-            this.newExamToSend.durationOfTest = event.target.value;
-        }
+        },*/
+  
+
 
 
 
@@ -193,7 +175,7 @@ app.component('exam-list-item',{
     }
 
 });
-app.mount('#TeacherDashboard');
+app.mount('#StudentDashboard');
 
 //const Home = app.component('exam-list-item')
 

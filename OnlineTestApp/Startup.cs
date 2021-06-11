@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using OnlineTestApp.Controllers;
 using OnlineTestApp.Services;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,11 @@ namespace OnlineTestApp
             services.AddSingleton<IExamRepository, SqlExamRepository>();
             services.AddSingleton<IQuestionsRepository, SqlQuestionsRepository>();
             services.AddSingleton<ITeacherRepository, SqlITeacherRepository>();
+            services.AddSingleton<IStudentRepository, SqlStudentRepository>();
+            services.AddSingleton<IExamInstanceRepository, SqlExamInstanceRepository>();
+
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

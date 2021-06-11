@@ -38,6 +38,19 @@
     <div class="container mt-5" >
       <!--enter new question section-->
 
+<div class="container mt-5" v-if="showGradesMode">
+  <h1>{{ examTitle }}</h1> 
+  <p>{{ examDate }}</p>
+  <h3 v-if="!isTheCurrentExmaHasStarted" style="color: crimson;">This exam has not started yet.</h3>
+
+
+
+
+
+
+
+</div>
+
 
 <div class="container mt-5" v-if="editExamMode" id="add-new-question">
     <div class="card question-card shadow" style="width: 55rem;">
