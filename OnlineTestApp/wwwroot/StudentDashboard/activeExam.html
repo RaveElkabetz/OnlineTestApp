@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://unpkg.com/vue@next" ></script>
+    <script src="activeExam.js" defer></script>
+    <link rel="stylesheet" href="activeExam.css" />
+    <title>Exam edit</title>
+  </head>
+  <body id="exam-edit-page">
+    <nav class="navbar navbar-light fixed-top bg-light">
+      <div class="container-fluid">
+        
+        <a class="navbar-brand" href="#">
+          <img src="https://icon-library.com/images/flat-edit-icon/flat-edit-icon-0.jpg" alt="" width="33" height="33" class="d-inline-block align-text-top">
+          Online Exam App - Student Mode
+        </a>
+
+
+
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio"  class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"  checked v-on:change="switchModes">
+          <label class="btn btn-outline-success"  for="btnradio1">Edit Exam</label>
+        
+          <input type="radio"  class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"  v-on:change="switchModes" >
+          <label class="btn btn-outline-success"  for="btnradio3">Show Grades</label>
+          
+        </div>
+      </div>
+    </nav>
+    <p>&ensp;</p>
+    <p>&ensp;</p>
+    <div class="container mt-5" >
+      <!--enter new question section-->
+
+<div class="container mt-5" v-if="showGradesMode">
+  <h1>{{ examTitle }}</h1> 
+  <p>{{ examDate }}</p>
+  <h3 v-if="!isTheCurrentExmaHasStarted" style="color: crimson;">This exam has not started yet.</h3>
+
+<div class="container mt-5" v-if="showGradesMode">
+  <exam-grade-list-item
+    v-for="exam in examsInstancesArray"
+    v-bind:exam="exam">
+
+  </exam-grade-list-item>
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+<div class="container mt-5" v-if="editExamMode" id="add-new-question">
+    
+  </div>
+
+<p>&ensp;</p>
+
+
+
+  <!--list of question added-->
+  <div class="mt-3" v-if="editExamMode">
+    <ul >
+      
+       <question-list-item
+          v-for="(questionObj,index) in questionArray"
+          :key="index"
+          :question="questionObj"
+          :indx="index"
+        ></question-list-item>
+      
+    </ul>
+  </div>
+
+  </div>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+  </body>
+</html>

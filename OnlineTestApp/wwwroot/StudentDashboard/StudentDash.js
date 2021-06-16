@@ -7,6 +7,10 @@
             userId: localStorage.Id,
             userPassword: localStorage.password,
             examsArray: [],
+            tooltipTriggerList: "",
+            tooltipList: ""
+
+
             //toggleAddNewTest: false,
 
 
@@ -131,10 +135,16 @@ app.component('exam-list-item',{
     </div>
     <div class="d-flex flex-row align-items-center">
         <div class="d-flex flex-column mr-2">
-            <div class="profile-image">  <button v-on:click="enterToActiveExamWindow" type="button" class="btn btn-outline-secondary"><img class="" src="/icons/edit-2.png" width="35"></button> </div>
+          <div class="row">
+            <div class="col"><h5 style="color: green; margin-top: 10px;">Start:</h5></div>
+            <div class="col"><div class="profile-image">  <button v-on:click="enterToActiveExamWindow" type="button" class="btn btn-outline-success" ><img class="" src="/icons/edit-2.png" width="35"></button></div>
+  
+          </div>
+        
+             </div>
         </div> <i class="fa fa-ellipsis-h"></i>
     </div>
-</li>`,
+  </li>`,
     data(){
         return{
             examDate: ""
@@ -175,8 +185,11 @@ app.component('exam-list-item',{
             var testDatePlusTime = this.addMinutes(new Date(this.exam.dateOfTest),this.exam.durationMinutes);
             var theDateOfTest = this.exam.dateOfTest;
             var  theDurationOfTest = this.exam.durationMinutes ;
+            console.log(this.exam.durationMinutes);
+            console.log(testDatePlusTime);
+            console.log(now);
             console.log("before the if");
-            if ( now > theDateOfTest &&  testDatePlusTime >= now) {
+            if ( this.dateInPast(new Date(theDateOfTest),new Date()) && this.dateInPast(new Date(),new Date(testDatePlusTime)) ) {
                 localStorage.currentExamId = this.exam.id;
                 localStorage.currentExamTitle = this.exam.title;
                 localStorage.currentTeacherId = this.exam.teacherId;
@@ -186,7 +199,7 @@ app.component('exam-list-item',{
                 console.log("in the if stat");
                 window.location.href = 'https://localhost:44308/StudentDashboard/activeExam.html';
             }
-            else if(testDatePlusTime < now )
+            else if(this.dateInPast(new Date(testDatePlusTime),new Date())   )
             {
                 window.alert("Sorry, can't participate in this test. the test is over.");
 
@@ -240,6 +253,7 @@ app.component('exam-list-item',{
         }
     },
     beforeMount(){
+      
 
     },
     mounted(){
