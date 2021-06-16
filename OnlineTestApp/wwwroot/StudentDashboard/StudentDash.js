@@ -159,6 +159,9 @@ app.component('exam-list-item',{
             console.log("arrived to init in delete");
             this.$root.init();           
         },
+        addMinutes(date, minutes) {
+            return new Date(date.getTime() + minutes*60000);
+        },
         dateInPast(firstDate, secondDate) {
             if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
               return true;
@@ -167,14 +170,31 @@ app.component('exam-list-item',{
             return false;
           },
         enterToActiveExamWindow(){
-            localStorage.currentExamId = this.exam.id;
-            localStorage.currentExamTitle = this.exam.title;
-            localStorage.currentTeacherId = this.exam.teacherId;
-            localStorage.currentStudentName = this.studentName;
-            //the user id and password was sent ad Id And Password
-            //
-            
-            window.location.href = 'https://localhost:44308/StudentDashboard/activeExam.html';
+            console.log("strarted the func");
+            var now = new Date();
+            var testDatePlusTime = this.addMinutes(new Date(this.exam.dateOfTest),this.exam.durationMinutes);
+            var theDateOfTest = this.exam.dateOfTest;
+            var  theDurationOfTest = this.exam.durationMinutes ;
+            console.log("before the if");
+            if ( now > theDateOfTest &&  testDatePlusTime >= now) {
+                localStorage.currentExamId = this.exam.id;
+                localStorage.currentExamTitle = this.exam.title;
+                localStorage.currentTeacherId = this.exam.teacherId;
+                localStorage.currentStudentName = this.studentName;
+                //the user id and password was sent ad Id And Password
+                //
+                console.log("in the if stat");
+                window.location.href = 'https://localhost:44308/StudentDashboard/activeExam.html';
+            }
+            else if(testDatePlusTime < now )
+            {
+                window.alert("Sorry, can't participate in this test. the test is over.");
+
+            }
+            else{
+                window.alert("This test has not started yet!!!");
+            }
+
             
 
         },
