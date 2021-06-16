@@ -8,7 +8,7 @@ const app = Vue.createApp({
             StudentMode: false,
             status: "",
             teacherUrl: "https://localhost:44308/api/Teachers/",
-            studentUrl: "https://localhost:44308/api/Students/"
+            studentUrl: "https://localhost:44308/api/Student/"
         };
     },
     methods: {
@@ -79,7 +79,7 @@ const app = Vue.createApp({
                                 console.log(data);
                                 if (data.password === this.userPassword) {
                                     console.log("password match!");
-        
+                                    window.location.href = 'https://localhost:44308/StudentDashboard/StudentDash.html';
                                     
                                 }
                     

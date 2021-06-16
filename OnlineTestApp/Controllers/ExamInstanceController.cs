@@ -27,12 +27,28 @@ namespace OnlineTestApp.Controllers
         }
 
         // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
+        [HttpGet("GetByTeacherId/{id}")]
         public IEnumerable<ExamInstanceModel> Get(int id)
         {
             var exams = examInstanceRepository.GetAllExamInstancesByTeachertId(id);
             return exams;
 
+
+        }
+        
+        [HttpGet("GetByExamId/{id}")]
+        public IEnumerable<ExamInstanceModel> Get(string id)
+        {
+            var exams = examInstanceRepository.GetAllExamInstancesByExamId(id);
+            return exams;
+
+        }
+
+        [HttpGet("GetByStudentId/{id}")]
+        public IEnumerable<ExamInstanceModel> Get(double id)
+        {
+            var exams = examInstanceRepository.GetAllExamInstancesByStudentId(id);
+            return exams;
 
         }
 

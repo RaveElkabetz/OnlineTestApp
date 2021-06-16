@@ -41,7 +41,7 @@ namespace OnlineTestApp.Services
                     SqlCommand addCommand = new SqlCommand(addStudent, connection);
                     addCommand.Parameters.AddWithValue("@Name", newStudent.Name);
                     addCommand.Parameters.AddWithValue("@Password", newStudent.Password);
-                    addCommand.Parameters.AddWithValue("@DateStartedWorking", newStudent.DateStartedLearning);
+                    addCommand.Parameters.AddWithValue("@DateStartedLearning", newStudent.DateStartedLearning);
                     addCommand.Parameters.AddWithValue("@examsIdList", newStudent.examsIdList);
                     newId = Convert.ToInt32(addCommand.ExecuteScalar());
 

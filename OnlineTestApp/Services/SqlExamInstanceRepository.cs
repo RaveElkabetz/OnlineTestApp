@@ -136,8 +136,9 @@ namespace OnlineTestApp.Services
             return examsInstancesList;
         }
 
-        public List<ExamInstanceModel> GetAllExamInstancesByStudentId(int studentId)
+        public List<ExamInstanceModel> GetAllExamInstancesByStudentId(double studentId)
         {
+            studentId = (int)studentId;
             ExamInstanceModel examInstanceModel = null;
             List<ExamInstanceModel> examsInstanceList = new List<ExamInstanceModel>();
             using (var connection = new SqlConnection(this.ConnectionString))
@@ -189,6 +190,39 @@ namespace OnlineTestApp.Services
                     
 
                     
+                }
+            }
+            return examsInstanceList;
+        }
+
+
+        public List<ExamInstanceModel> GetAllExamInstancesByExamId(string examId)
+        {
+            //int intTeachId = Int32.Parse(teacherId);
+
+            ExamInstanceModel examInstanceModel = null;
+            List<ExamInstanceModel> examsInstanceList = new List<ExamInstanceModel>();
+            using (var connection = new SqlConnection(this.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand allCommand = new SqlCommand("SELECT * FROM EXAMSINSTANCES WHERE ExamId =" + examId.Trim(), connection);
+                using (var reader = allCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        examInstanceModel = new ExamInstanceModel();
+                        examInstanceModel.Id = reader.GetInt32(0);
+                        examInstanceModel.ExamId = reader.GetInt32(1);
+                        examInstanceModel.StudentId = reader.GetInt32(2);
+                        examInstanceModel.TeacherId = reader.GetInt32(3);
+                        examInstanceModel.DateOfTest = reader.GetDateTime(4);
+                        examInstanceModel.ExamTitle = reader.GetString(5);
+                        examInstanceModel.Grade = reader.GetDouble(6);
+                        examsInstanceList.Add(examInstanceModel);
+                    }
+
+
+
                 }
             }
             return examsInstanceList;

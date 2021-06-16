@@ -151,7 +151,7 @@ app.component('exam-list-item',{
         <div class="ml-2">
             <h6 class="mb-0">{{ exam.title }}</h6>
             <div class="d-flex flex-row mt-1 text-black-50 date-time">
-                <div><i class="fa fa-calendar-o"></i><span class="ml-2"> {{exam.dateOfTest}}   22 May 2020 11:30 PM</span></div>
+                <div><i class="fa fa-calendar-o"></i><span class="ml-2"> {{exam.dateOfTest}}   </span></div>
                 
             </div>
         </div>
@@ -186,10 +186,12 @@ app.component('exam-list-item',{
         },
         enterToEditExamWindow(){
             localStorage.currentExamId = this.exam.id;
+            
             localStorage.currentExamTitle = this.exam.title;
             localStorage.currentUserId = this.exam.teacherId;
             localStorage.currentExamDate = this.exam.dateOfTest;
             localStorage.currentExam = this.exam;
+            console.log(localStorage);
             
             window.location.href = 'https://localhost:44308/TeacherDashboard/TeachExamEdit.html';
             

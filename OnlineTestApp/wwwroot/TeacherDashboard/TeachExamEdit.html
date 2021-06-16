@@ -43,6 +43,14 @@
   <p>{{ examDate }}</p>
   <h3 v-if="!isTheCurrentExmaHasStarted" style="color: crimson;">This exam has not started yet.</h3>
 
+<div class="container mt-5" v-if="showGradesMode">
+  <exam-grade-list-item
+    v-for="exam in examsInstancesArray"
+    v-bind:exam="exam">
+
+  </exam-grade-list-item>
+</div>
+
 
 
 
@@ -109,7 +117,8 @@
                 <div class="col-1  mb-4"><a class="btn btn-success btn-lg" v-on:click="submitNewQuestion" href="#" role="button">Add</a></div>
                 <div class="col-1  mb-4"><a class="btn btn-warning btn-lg" v-on:click="clearEditOrNewFields" href="#" role="button">Clear</a></div>
                 <div class="col-1"></div>
-                <div class="col-7"></div>
+                <div class="col-5"></div>
+                <div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
                 <div class="col-2  mb-4 ml-1"><a class="btn btn-danger btn-lg" v-if:="editState" v-on:click="switchToAddNewQuestionState" href="#" role="button">Cancel</a></div>
                 
             </div>

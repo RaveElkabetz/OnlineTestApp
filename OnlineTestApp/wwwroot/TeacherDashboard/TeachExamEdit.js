@@ -6,6 +6,7 @@ const app = Vue.createApp({
             examsUrl: "https://localhost:44308/api/Exams/",
             questionUrl: "https://localhost:44308/api/Question/",
             examInstancesUrl: "https://localhost:44308/api/ExamInstance/",
+            examInstancesUrlByExamId: "https://localhost:44308/api/ExamInstance/GetByExamId/",
             teacherName: "",
             userId: localStorage.currentUserId,
             userPassword: localStorage.password,
@@ -20,6 +21,7 @@ const app = Vue.createApp({
             secondQuestionToAdd:"",
             thirdQuestionToAdd:"",
             fourthQuestionToAdd:"",
+            theCorrectAnswer:"",
             //-----
             firstAnswerToEdit:"",
             secondAnswerToEdit:"",
@@ -120,12 +122,38 @@ const app = Vue.createApp({
             return false;
           },
         switchBackToGradesMode(){
+            
             this.editExamMode=false;
             this.showGradesMode=true;
 
  //+=================================================
+            console.log(localStorage.currentExamDate);
             var myDate = localStorage.currentExamDate;
-            myDate = myDate.substring(0, myDate.length-3);
+            var n = 3;
+            if (myDate.length === 20) {
+                n=4;
+                
+            }
+            else if (myDate.length === 21) {
+                n=5;
+            }
+            else if (myDate.length === 18) {
+                n=2;
+            }
+
+            else if (myDate.length === 22) {
+                n=6;
+            }
+            
+            else if (myDate.length === 23) {
+                n=7;
+            }
+            else if (myDate.length === 24) {
+                n=8;
+            }
+            //2021-08-12T09:30:0
+
+            myDate = myDate.substring(0, myDate.length-n);
             
             const testDate = new Date(myDate);
             console.log("below is the date");
@@ -135,15 +163,21 @@ const app = Vue.createApp({
             console.log(newDate);
             this.examDate = newDate;
 
+
             var today = new Date();
             this.isTheCurrentExmaHasStarted = this.dateInPast(testDate,today);
+            if (this.isTheCurrentExmaHasStarted) {
+
+                
+            }
 
 
 
 
 
 
-
+console.log(this.examInstancesUrlByExamId);
+console.log(this.examId);
             fetch(this.teacherUrl + this.userId).then((response) => {
                 
                 if (response.ok){
@@ -156,7 +190,7 @@ const app = Vue.createApp({
                     if (data.password === this.userPassword) {
                         console.log("password match!");
                         //now need to show all his exams: GET all exam by teacher id-
-                        fetch(this.examInstancesUrl + this.userId).then((response) => {// להמשיך מכאן לחבר קומפוננטה אל הציוניפ
+                        fetch(this.examInstancesUrlByExamId + this.examId).then((response) => {// להמשיך מכאן לחבר קומפוננטה אל הציוניפ
                             if (response.ok){
                                     return response.json();
                                 }
@@ -164,28 +198,39 @@ const app = Vue.createApp({
                             .then((data) =>{
                                 
                                 
-                       
-                                var i = 0;
-                                this.examsInstancesArray.push.apply(this.examsInstancesArray, data);
-                                //this.examsArray.shift();
-    
-                                console.log("new-logs-down");
-                                console.log(this.examsInstancesArray);
-                                console.log(data);
-    
                                 
-    
-    
+                           
+                                
+                             var i = 0;
+                             
+                             
+                             
+                             //this.examsArray.shift();
+                        
+                             console.log("new-logs-down");
+                             console.log(this.examsInstancesArray);
+                             console.log(data);
+
+                
+                            
+                            this.examsInstancesArray = [];
+                            this.examsInstancesArray.push.apply(this.examsInstancesArray, data);
+
                     
                             }) 
                         
                     }
         
-                }) 
+                }
+                
+                
+                ) 
+
 
             
         },
         switchBackToExamMode(){
+            this.examsInstancesArray = [];
 
  
 
@@ -219,6 +264,7 @@ const app = Vue.createApp({
             this.secondQuestionToAdd = "";
             this.thirdQuestionToAdd = "";
             this.fourthQuestionToAdd = "";
+            this.theCorrectAnswer = "";
 
             this.newQuestionToSend.score = 0;
             this.newQuestionToSend.question="";
@@ -336,7 +382,8 @@ app.component('question-list-item',{
             <div class="row">
                 <div class="col-1 mb-4"><a class="btn btn-warning btn-lg shadow" v-on:click="editThisQuestion" href="#" role="button">edit</a></div>
                 <div class="col-1 mb-4"><a class="btn btn-danger btn-lg shadow" href="#" role="button">delete</a></div>
-                <div class="col-8"></div>
+                <div class="col-6"></div>
+                <div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
                 <div class="col-2 pt-2"> <h4>Score: {{ question.points }}</h4> </div>
                 
             </div>
@@ -425,6 +472,73 @@ app.component('question-list-item',{
     mounted(){
        // console.log("created works"+this.question.question);
         this.unssembleTheAnswers();
+    }
+
+});
+app.component('exam-grade-list-item',{
+    props:['exam'],
+    template:`<li class="grades d-flex justify-content-between  shadow" style="
+        background-color: antiquewhite;
+        border-radius: 4px;
+        border-color:  rgb(148, 124, 105);
+        border-style: initial;
+        margin-bottom: 1%;"
+        >
+    <div class="d-flex flex-row align-items-center"><i class="fa fa-check-circle checkicon"></i>
+        <div class="ml-2">
+            <h6 class="mb-0">Student Id: {{ exam.studentId }}</h6>
+            <div class="d-flex flex-row mt-1 text-black-50 date-time">
+                <div><i class="fa fa-calendar-o"></i><span class="ml-2"> {{exam.dateOfTest}}  </span></div>
+                
+            </div>
+
+        </div>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+        <div class="d-flex flex-column mr-2">
+            <div class="profile-image">             
+            <h5>
+            Grade: {{ exam.grade }}
+            </h5> </div>
+        </div> <i class="fa fa-ellipsis-h"></i>
+    </div>
+</li>
+`,
+    data(){
+        return{
+
+        }
+    },
+    methods:{
+        deleteThisTest(){/*
+            console.log(this.exam);
+            const id = this.exam.teacherId;
+            fetch('https://localhost:44308/api/ExamInstance/' + id, {
+                method: 'DELETE',
+                })
+                .then(res => res.text()) // or res.json()
+                .then(res => console.log(res));
+            console.log("before del");
+            console.log(this.$root.examsArray); 
+            this.$root.examsArray = [];  
+            console.log("after del");
+            console.log(this.$root.examsArray);  
+            console.log("arrived to init in delete");
+            this.$root.init();   */        
+        },
+        enterToEditExamWindow(){
+            /*
+            localStorage.currentExamId = this.exam.id;
+            localStorage.currentExamTitle = this.exam.title;
+            localStorage.currentUserId = this.exam.teacherId;
+            localStorage.currentExamDate = this.exam.dateOfTest;
+            localStorage.currentExam = this.exam;
+            
+            window.location.href = 'https://localhost:44308/TeacherDashboard/TeachExamEdit.html';
+            */
+            
+
+        }
     }
 
 });

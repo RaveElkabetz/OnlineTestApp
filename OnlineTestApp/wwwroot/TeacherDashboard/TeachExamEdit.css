@@ -3,9 +3,61 @@
     background-color: beige;
 }
 
+
+
+ul.ba{
+    list-style-type: none;
+}
+
 body {
     background: #c9cecb
 }
-ul.ba{
-    list-style-type: none;
+
+.icons i {
+    color: #b5b3b3;
+    border: 1px solid #b5b3b3;
+    padding: 6px;
+    margin-left: 4px;
+    border-radius: 5px;
+    cursor: pointer
+}
+
+.activity-done {
+    font-weight: 600
+}
+
+.list-group li {
+    margin-bottom: 12px
+}
+
+
+
+.list li {
+    list-style: none;
+    padding: 10px;
+    border: 1px solid #e3dada;
+    margin-top: 12px;
+    border-radius: 5px;
+    background: #f8f8eb
+}
+
+.checkicon {
+    color: green;
+    font-size: 19px
+}
+
+.date-time {
+    font-size: 12px
+}
+
+.profile-image img {
+    margin-left: 3px
+}
+
+.grades{
+    background-color: antiquewhite;
+    border-radius: 15px;
+    border-color: rgb(148, 124, 105);
+    border-style:initial;
+    margin-bottom: 10%;
 }

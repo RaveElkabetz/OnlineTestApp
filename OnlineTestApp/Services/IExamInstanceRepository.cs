@@ -13,7 +13,7 @@ namespace OnlineTestApp.Services
 
         public ExamInstanceModel GetExamInstanceById(int Id);
 
-        public List<ExamInstanceModel> GetAllExamInstancesByStudentId(int studentId);
+        public List<ExamInstanceModel> GetAllExamInstancesByStudentId(double studentId);
 
         public List<ExamInstanceModel> GetAllExamInstancesByTeachertId(int teacherId);
 
@@ -24,7 +24,6 @@ namespace OnlineTestApp.Services
         public bool DeleteExamInstance(int ID);
 
         public bool UpdateExamInstance(ExamInstanceModel newExamInstance);
-
-
+        public List<ExamInstanceModel> GetAllExamInstancesByExamId(string id);
     }
 }
