@@ -422,6 +422,24 @@ app.component('question-list-item',{
             this.$root.fourthQuestionToAdd = this.fourthQuestion;
             this.$root.newQuestionToSend.score = this.points;
 
+            fetch(questionUrl + id, {
+                method: 'PUT'
+                ,
+                body: JSON.stringify( {
+                    question: this.newQuestionToSend.question,
+                    choices: this.newQuestionToSend.choices,
+                    correct: this.newQuestionToSend.correct,
+                    points: this.newQuestionToSend.points,
+                    examId: this.examId
+
+                })
+                })
+                .then(res => res.text()) // or res.json()
+                .then(res => console.log(res));
+             
+            this.$root.questionArray = [];  
+
+            this.$root.init(); 
 
         },
         unssembleTheAnswers(){

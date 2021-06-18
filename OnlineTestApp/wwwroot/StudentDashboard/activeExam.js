@@ -8,6 +8,7 @@ const app = Vue.createApp({
             questionUrl: "https://localhost:44308/api/Question/",
             examInstancesUrl: "https://localhost:44308/api/ExamInstance/",
             examInstancesUrlByExamId: "https://localhost:44308/api/ExamInstance/GetByExamId/",
+            currentExamInstanceScore : 0,
             teacherName: "",
             userId: localStorage.currentUserId,
             userPassword: localStorage.password,
@@ -17,6 +18,7 @@ const app = Vue.createApp({
             editExamMode: true,
             showGradesMode: false,
             isTheCurrentExmaHasStarted: false,
+            countDownClock: "test",
             //switchModes: null,
             firstQuestionToAdd:"",
             secondQuestionToAdd:"",
@@ -62,7 +64,7 @@ const app = Vue.createApp({
     methods: {
         init(){
             //formating the date->
-
+            
 
 
             console.log(localStorage);
@@ -104,13 +106,13 @@ const app = Vue.createApp({
         
                 }) 
 
-        },
-        /*switchModes(){
-            this.editExamMode = !this.editExamMode;
-            this.showGradesMode = !this.showGradesMode;
-            console.log("exam:"+this.editExamMode+" grades:"+this.showGradesMode);
+  
 
-        },*/
+        },
+        startOrContinueTheCountdown()
+        {
+            this.countDownClock = moment(new Date(this.examDate)).countdown().toString();
+        },
         submitEditThisQuestion(){
             //this.clearEditOrNewFields();
  
@@ -310,7 +312,8 @@ console.log(this.examId);
         assembleTheAnswers(){
             this.newQuestionToSend.choices="";
             this.newQuestionToSend.choices+=this.firstQuestionToAdd+ ';' +this.secondQuestionToAdd+';'+this.thirdQuestionToAdd+';'+this.fourthQuestionToAdd;
-        }
+        },
+        
 
 
     },
@@ -350,30 +353,30 @@ app.component('question-list-item',{
           <hr class="my-4">
           <div class="container">
           <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+              <input class="form-check-input" type="radio" @change="onChange($event)" value="1" :name="indx" id="flexRadioDefault1">
               <label class="form-check-label" for="flexRadioDefault1">
                 {{ firstQuestion }}
               </label>
             </div>
   
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-              <label class="form-check-label" for="flexRadioDefault1">
+              <input class="form-check-input" type="radio" @change="onChange($event)" value="2" :name="indx" id="flexRadioDefault2">
+              <label class="form-check-label" for="flexRadioDefault2">
                 {{ secondQuestion }}
               </label>
             </div>
   
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-              <label class="form-check-label" for="flexRadioDefault1">
+              <input class="form-check-input" type="radio" @change="onChange($event)" value="3" :name="indx" id="flexRadioDefault3">
+              <label class="form-check-label" for="flexRadioDefault3">
                 {{ thirdQuestion }}
               </label>
             </div>
   
   
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-              <label class="form-check-label" for="flexRadioDefault2">
+              <input class="form-check-input" type="radio" @change="onChange($event)" value="4" :name="indx" id="flexRadioDefault4" >
+              <label class="form-check-label" for="flexRadioDefault4">
                 {{ fourthQuestion }}
               </label>
             </div>
@@ -381,11 +384,10 @@ app.component('question-list-item',{
             <hr>
             <div class="container">
             <div class="row">
-                <div class="col-1 mb-4"><a class="btn btn-warning btn-lg shadow" v-on:click="editThisQuestion" href="#" role="button">edit</a></div>
-                <div class="col-1 mb-4"><a class="btn btn-danger btn-lg shadow" href="#" role="button">delete</a></div>
-                <div class="col-6"></div>
-                <div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
-                <div class="col-2 pt-2"> <h4>Score: {{ question.points }}</h4> </div>
+               
+                <div class="col-2 pt-2"> <h4 style="padding-bottom: 20px;">Score: {{ question.points }}</h4> </div>
+                <div class="col-10"></div>
+               
                 
             </div>
           </div>
@@ -400,13 +402,39 @@ app.component('question-list-item',{
             firstQuestion: "",
             secondQuestion: "",
             thirdQuestion: "",
-            fourthQuestion: ""
+            fourthQuestion: "",
+            answerChosen: ""
 
 
 
         }
     },
     methods:{
+        onChange(event){
+            console.log("changed!");
+            this.answerChosen = event.target.value;
+            console.log(this.answerChosen);
+            this.checkThisQuestion();
+        },
+        
+        checkThisQuestion(){
+            console.log(parseInt(this.question.correct));
+            console.log(this.answerChosen);
+            if(parseInt(this.question.correct) == this.answerChosen){
+                console.log("entered if");
+                this.$root.currentExamInstanceScore+= this.question.points;
+                console.log("below this is the totla score of the test");
+                console.log(this.$root.currentExamInstanceScore);
+            }
+
+
+
+
+
+
+
+
+        },
 
         editThisQuestion(){
             window.scrollTo(0, 0);

@@ -8,7 +8,11 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@next" ></script>
+    <script src="/lib/moment/moment.min.js" ></script>
+    <script src="/lib/moment/countdown.min.js"></script>
+    <script src="/lib/moment/moment-countdown.min.js"></script>
     <script src="activeExam.js" defer></script>
+    
     <link rel="stylesheet" href="activeExam.css" />
     <title>Exam edit</title>
   </head>
@@ -22,14 +26,11 @@
         </a>
 
 
-
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-          <input type="radio"  class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"  checked v-on:change="switchModes">
-          <label class="btn btn-outline-success"  for="btnradio1">Edit Exam</label>
-        
-          <input type="radio"  class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"  v-on:change="switchModes" >
-          <label class="btn btn-outline-success"  for="btnradio3">Show Grades</label>
-          
+        <div>
+          <p  >{{countDownClock}}</p>
+        </div>
+        <div >
+          <button class="btn btn-outline-success"> SUBMIT THE TEST </button>
         </div>
       </div>
     </nav>

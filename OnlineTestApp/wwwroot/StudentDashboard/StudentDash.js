@@ -69,32 +69,7 @@
     
 
         },
-        /*submitClickedNewTeacher(){
-            this.newExamToSend.dateOfTest = this.newExamToSend.dateOfTest.slice(0,10);
-            this.newExamToSend.dateOfTest += ("T" + this.newExamToSend.testHour+":00.000Z");
-           
-            fetch(this.examsUrl,{
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify( {
-                    title: this.newExamToSend.title,
-                    teacherId: this.userId,
-                    dateOfTest: this.newExamToSend.dateOfTest,
-                    durationOfTest: this.newExamToSend.durationOfTest
 
-                })
-
-            });
-            this.toggleAddNewTest= !this.toggleAddNewTest;
-            this.examsArray = [];
-             
-            this.init();
-            console.log("init after adding");
-    
-
-        },*/
   
 
 
@@ -104,6 +79,7 @@
     },
     mounted(){
         this.init();
+        
 
 
     },
@@ -172,34 +148,28 @@ app.component('exam-list-item',{
         addMinutes(date, minutes) {
             return new Date(date.getTime() + minutes*60000);
         },
-        dateInPast(firstDate, secondDate) {
-            if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
-              return true;
-            }
-          
-            return false;
-          },
+  
         enterToActiveExamWindow(){
-            console.log("strarted the func");
-            var now = new Date();
-            var testDatePlusTime = this.addMinutes(new Date(this.exam.dateOfTest),this.exam.durationMinutes);
-            var theDateOfTest = this.exam.dateOfTest;
+            
             var  theDurationOfTest = this.exam.durationMinutes ;
-            console.log(this.exam.durationMinutes);
-            console.log(testDatePlusTime);
-            console.log(now);
-            console.log("before the if");
-            if ( this.dateInPast(new Date(theDateOfTest),new Date()) && this.dateInPast(new Date(),new Date(testDatePlusTime)) ) {
+            var testDatePlusTime = this.addMinutes(new Date(this.exam.dateOfTest),theDurationOfTest);
+            var theDateOfTest = moment(new Date(this.exam.dateOfTest));
+            var testTimePlusDuration = moment(testDatePlusTime);
+            var nowDate = moment(new Date());
+            
+            
+            
+            if ( nowDate.isBefore(testDatePlusTime) && nowDate.isAfter(theDateOfTest) ) {
                 localStorage.currentExamId = this.exam.id;
                 localStorage.currentExamTitle = this.exam.title;
                 localStorage.currentTeacherId = this.exam.teacherId;
                 localStorage.currentStudentName = this.studentName;
                 //the user id and password was sent ad Id And Password
                 //
-                console.log("in the if stat");
+                
                 window.location.href = 'https://localhost:44308/StudentDashboard/activeExam.html';
             }
-            else if(this.dateInPast(new Date(testDatePlusTime),new Date())   )
+            else if(nowDate.isAfter(testDatePlusTime))   
             {
                 window.alert("Sorry, can't participate in this test. the test is over.");
 
