@@ -8,17 +8,21 @@ const app = Vue.createApp({
             questionUrl: "https://localhost:44308/api/Question/",
             examInstancesUrl: "https://localhost:44308/api/ExamInstance/",
             examInstancesUrlByExamId: "https://localhost:44308/api/ExamInstance/GetByExamId/",
+            examInstancesArray : [],
             currentExamInstanceScore : 0,
+            currentExamHasBeenSubmited: false,
             teacherName: "",
             userId: localStorage.currentUserId,
             userPassword: localStorage.password,
             examId: localStorage.currentExamId,
             examTitle: localStorage.currentExamTitle,
             examDate: localStorage.currentExamDate,
+            examDatePlusDuration: "",
+            hideTheQuestion: false,
             editExamMode: true,
             showGradesMode: false,
             isTheCurrentExmaHasStarted: false,
-            countDownClock: "test",
+            countDownClock: "",
             //switchModes: null,
             firstQuestionToAdd:"",
             secondQuestionToAdd:"",
@@ -64,21 +68,20 @@ const app = Vue.createApp({
     methods: {
         init(){
             //formating the date->
-            
-
+            this.checkIfTheExamBeenTaken();
+            console.log(moment(new Date()));
 
             console.log(localStorage);
+            this.userId = localStorage.currentStudentId;
+          
+            console.log(this.studentUrl);
+            console.log(this.userId);
             this.examId = localStorage.currentExamId;
-            fetch(this.teacherUrl + this.userId).then((response) => {
-                if (response.ok){
-                        return response.json();
-                    }
-                })
-                .then((data) =>{
-                    console.log(data);
-                    this.teacherName = data.name;
-                    if (data.password === this.userPassword) {
-                        console.log("password match!");
+            
+                    
+                    //this.teacherName = data.name;
+                     
+                        //console.log("password match!");
                         //now need to show all his exams: GET all exam by teacher id-
                         console.log("trying to fetch exam num "+this.examId+" "+this.examTitle);
                         fetch(this.questionUrl + this.examId).then((response) => {
@@ -102,20 +105,124 @@ const app = Vue.createApp({
                     
                             }) 
                         
+                    
+        
+                 
+                this.examDate = localStorage.currentExamDate;
+                console.log(localStorage);
+                console.log(this.examDate);
+                this.examDatePlusDuration = this.addMinutes(new Date(this.examDate), localStorage.currentExamDuration);
+                console.log(this.examDatePlusDuration);
+                setInterval(this.startOrContinueTheCountdown,1000);
+
+        },
+        addMinutes(date, minutes) {
+            return new Date(date.getTime() + minutes*60000);
+        },
+        checkIfTheExamBeenTaken()
+        {
+            
+            const results = [];
+            fetch(this.examInstancesUrl).then((response) => {
+                if (response.ok){
+                        return response.json();
                     }
+                })
+                .then((data) =>{
+                    //this.examsArray.shift();
+                    
+                    
+
+                    console.log("all the instances");
+                    console.log(data);
+                    console.log(localStorage);
+                    var i = 0;
+                    for (const id in data) {
+                        results.push({
+                            id: id,
+                            examId: data[id].examId,
+                            teacherId: data[id].teacherId,
+                            studentId: data[id].studentId,
+                            dateOfTest: data[id].dateOfTest,
+                            examTitle: data[id].examTitle,
+                            grade: data[id].grade
+                        });
+
+
+                    }
+                    console.log("results:");
+                    console.log(results);
+                    console.log(results[1]);
+                    console.log(results.length);
+
+                    this.examInstancesArray = results;
+                    for (let i = 0; i < results.length; i++) {
+                        console.log(results[i]);
+                        if(results[i].examId == localStorage.currentExamId &&
+                            results[i].studentId == localStorage.currentStudentId &&
+                            results[i].teacherId == localStorage.currentTeacherId)
+                            {
+                                this.currentExamHasBeenSubmited = true;
+                                this.hideTheQuestion = true;
+                            }
+                    }
+                     
+                            
+                    
+
+
+                    
+
+
         
                 }) 
-
-  
-
+            
         },
         startOrContinueTheCountdown()
         {
-            this.countDownClock = moment(new Date(this.examDate)).countdown().toString();
+            
+            if(moment(new Date()).isBefore(moment(this.examDatePlusDuration)) )
+            {//check if the time not ended, if it does put on the timer "ENDED!" in red and then make the questions dissapear
+                this.countDownClock = moment(new Date(this.examDatePlusDuration)).countdown().toString();
+            }
+            else
+            {
+                this.countDownClock = "ENDED!"
+                this.hideTheQuestion = true;
+            }
         },
         submitEditThisQuestion(){
             //this.clearEditOrNewFields();
  
+        },
+        submitTheTest()
+        {
+            console.log(localStorage);
+            console.log(this.currentExamInstanceScore);
+            if (confirm('Are you sure you want to exit the test and submit it?')) {
+                // Save it!
+                fetch(this.examInstancesUrl,{
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify( {
+                        examId: parseInt(localStorage.currentExamId),
+                        teacherId: localStorage.currentTeacherId,
+                        studentId: localStorage.currentStudentId,
+                        dateOfTest: new Date(),
+                        examTitle: localStorage.currentExamTitle,
+                        grade: this.currentExamInstanceScore
+    
+                    })
+    
+                });
+                console.log('Thing was saved to the database.');
+                window.location.href = 'https://localhost:44308/StudentDashboard/StudentDash.html';
+              } else {
+                // Do nothing!
+                console.log('Thing was not saved to the database.');
+              }
         },
         dateInPast(firstDate, secondDate) {
             if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {

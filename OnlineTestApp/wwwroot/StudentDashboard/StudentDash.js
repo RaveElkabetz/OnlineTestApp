@@ -24,6 +24,8 @@
         ,
 
         init(){
+            console.log(this.userId);
+            localStorage.currentStudentId = this.userId;
             fetch(this.studentUrl + this.userId).then((response) => {
                 if (response.ok){
                         return response.json();
@@ -31,7 +33,7 @@
                 })
                 .then((data) =>{
                     console.log(data);
-                    this.studentName = data.name;
+                   // this.studentName = data.name;
                     if (data.password === this.userPassword) {
                         console.log("password match!");
                         //now need to show all his exams: GET all exam by teacher id-
@@ -160,10 +162,15 @@ app.component('exam-list-item',{
             
             
             if ( nowDate.isBefore(testDatePlusTime) && nowDate.isAfter(theDateOfTest) ) {
+                //localStorage.clear();
                 localStorage.currentExamId = this.exam.id;
                 localStorage.currentExamTitle = this.exam.title;
                 localStorage.currentTeacherId = this.exam.teacherId;
+                localStorage.currentStudentId = this.$root.userId;
                 localStorage.currentStudentName = this.studentName;
+                localStorage.currentExamDate = this.exam.dateOfTest;
+                localStorage.currentExamDuration = this.exam.durationMinutes;
+                localStorage.currentExam = this.exam;
                 //the user id and password was sent ad Id And Password
                 //
                 

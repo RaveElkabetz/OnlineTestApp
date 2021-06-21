@@ -27,16 +27,27 @@
 
 
         <div>
-          <p  >{{countDownClock}}</p>
+          <h6  style="padding-top: 5px;">{{countDownClock}}</h6>
         </div>
         <div >
-          <button class="btn btn-outline-success"> SUBMIT THE TEST </button>
+          <button v-on:click="submitTheTest" class="btn btn-outline-success"> SUBMIT THE TEST </button>
         </div>
       </div>
     </nav>
     <p>&ensp;</p>
     <p>&ensp;</p>
-    <div class="container mt-5" >
+    <div v-if="currentExamHasBeenSubmited">
+      <h3 style="margin-left: 20px;" >Sorry. this test has been submited. can't participate in this test.</h3>
+      <p>&ensp;</p>
+
+    </div>
+    
+    
+    <div v-if="hideTheQuestion && !currentExamHasBeenSubmited">
+      <h2 style="color: crimson;">The Test is over.</h2>
+      <h4>Please submit the test before exit.</h4>
+    </div>
+    <div v-if="!hideTheQuestion" class="container mt-5" >
       <!--enter new question section-->
 
 <div class="container mt-5" v-if="showGradesMode">
@@ -59,6 +70,7 @@
 
 
 </div>
+
 
 
 <div class="container mt-5" v-if="editExamMode" id="add-new-question">

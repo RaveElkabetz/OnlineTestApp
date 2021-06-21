@@ -185,6 +185,7 @@ app.component('exam-list-item',{
             this.$root.init();           
         },
         enterToEditExamWindow(){
+            //localStorage.clear();
             localStorage.currentExamId = this.exam.id;
             
             localStorage.currentExamTitle = this.exam.title;
