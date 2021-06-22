@@ -18,6 +18,7 @@ const app = Vue.createApp({
             examTitle: localStorage.currentExamTitle,
             examDate: localStorage.currentExamDate,
             examDatePlusDuration: "",
+            isDisabled: false,
             hideTheQuestion: false,
             editExamMode: true,
             showGradesMode: false,
@@ -164,6 +165,7 @@ const app = Vue.createApp({
                             {
                                 this.currentExamHasBeenSubmited = true;
                                 this.hideTheQuestion = true;
+                                this.isDisabled = true;
                             }
                     }
                      
@@ -199,6 +201,7 @@ const app = Vue.createApp({
         {
             console.log(localStorage);
             console.log(this.currentExamInstanceScore);
+            
             if (confirm('Are you sure you want to exit the test and submit it?')) {
                 // Save it!
                 fetch(this.examInstancesUrl,{
@@ -217,6 +220,8 @@ const app = Vue.createApp({
                     })
     
                 });
+                console.log("before is disable");
+                this.isDisabled = true;
                 console.log('Thing was saved to the database.');
                 window.location.href = 'https://localhost:44308/StudentDashboard/StudentDash.html';
               } else {

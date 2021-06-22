@@ -29,15 +29,51 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="d-flex justify-content-between align-items-center activity">
-                        <div class="jumbotron jumbotron-fluid">
+                       
                             <div class="container">
                               <h1 class="display-4">Student Dashboard</h1>
-                              <p class="lead">Here you can participate in curring exams, and view your grades.</p>
+                              <div class="row">
+                                <div class="col-6">
+                                  <p class="lead">Here you can take live exams, and view your grades.</p>
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-4">
+                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                      <input type="radio"  class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"  checked v-on:change="switchModes">
+                                      <label class="btn btn-outline-success"  for="btnradio1">Exams</label>
+                                    
+                                      <input type="radio"  class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"  v-on:change="switchModes" >
+                                      <label class="btn btn-outline-success"  for="btnradio3">Show Grades</label>
+                                    </div>
+                              </div>
+                            </div>
                               
                             </div>
-                            
-                          </div>
+                          
                         </div>
+
+                        
+                      
+         
+                        
+                        <div class="container mt-5" v-if="showGradesMode">
+                          <exam-grade-list-item
+                            v-for="exam in examsInstancesArray"
+                            v-bind:exam="exam">
+                        
+                          </exam-grade-list-item>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+
+                  <div v-if='showExamsMode'>
                         <hr v-if="!toggleAddNewTest">
 
                         <div v-if="!toggleAddNewTest" class="container">
@@ -133,6 +169,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </div>
 
     </section>

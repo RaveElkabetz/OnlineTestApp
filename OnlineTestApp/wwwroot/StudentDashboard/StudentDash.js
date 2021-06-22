@@ -3,7 +3,12 @@
         return {
             studentUrl: "https://localhost:44308/api/Student/",
             examsUrl: "https://localhost:44308/api/Exams/",
+            examInstancesUrlByStudentId: "https://localhost:44308/api/ExamInstance/GetByStudentId/",
             studentName: "",
+            studentId: localStorage.currentStudentId,
+            showGradesMode: false,
+            showExamsMode: true,
+            examsInstancesArray: [],
             userId: localStorage.Id,
             userPassword: localStorage.password,
             examsArray: [],
@@ -71,6 +76,137 @@
     
 
         },
+        dateInPast(firstDate, secondDate) {
+            if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
+              return true;
+            }
+          
+            return false;
+          },
+        
+        
+        switchBackToGradesMode(){
+            
+            this.showExamsMode=false;
+            this.showGradesMode=true;
+
+ //+=================================================
+            console.log(localStorage.currentExamDate);
+            var myDate = localStorage.currentExamDate;
+            var n = 3;
+            if (myDate.length === 20) {
+                n=4;
+                
+            }
+            else if (myDate.length === 21) {
+                n=5;
+            }
+            else if (myDate.length === 18) {
+                n=2;
+            }
+
+            else if (myDate.length === 22) {
+                n=6;
+            }
+            
+            else if (myDate.length === 23) {
+                n=7;
+            }
+            else if (myDate.length === 24) {
+                n=8;
+            }
+            //2021-08-12T09:30:0
+
+            myDate = myDate.substring(0, myDate.length-n);
+            
+            const testDate = new Date(myDate);
+            console.log("below is the date");
+            console.log(testDate);
+            var newDate = testDate.toString();
+            newDate= newDate.substring(0,21);
+            console.log(newDate);
+            this.examDate = newDate;
+
+
+            var today = new Date();
+            this.isTheCurrentExmaHasStarted = this.dateInPast(testDate,today);
+            if (this.isTheCurrentExmaHasStarted) {
+
+                
+            }
+
+
+
+
+
+
+            console.log(this.examInstancesUrlByExamId);
+            console.log(this.examId);
+            
+            
+             //now need to show all his exams: GET all exam by teacher id-
+             fetch(this.examInstancesUrlByStudentId + this.userId).then((response) => {// להמשיך מכאן לחבר קומפוננטה אל הציוניפ
+                 if (response.ok){
+                         return response.json();
+                     }
+                 })
+                 .then((data) =>{
+                     
+                     
+                     
+                
+                     
+                  var i = 0;
+                  
+                  
+                  
+                  //this.examsArray.shift();
+             
+                  console.log("new-logs-down");
+                  console.log(this.examsInstancesArray);
+                  console.log(data);
+    
+                 
+                 this.examsInstancesArray = [];
+                 this.examsInstancesArray.push.apply(this.examsInstancesArray, data);
+        
+                 } 
+             
+                    
+        
+                
+                
+                
+                 
+
+
+            
+                 )},
+                 switchBackToExamMode(){
+                    this.examsInstancesArray = [];
+        
+         
+        
+        
+        //================================================
+                    this.showGradesMode=false;
+                    this.showExamsMode = true;
+                    
+                },
+
+        switchModes(){
+            
+            
+            if (this.showExamsMode && !this.showGradesMode) {
+                this.switchBackToGradesMode();
+                return;
+            }
+            if(!this.showExamsMode && this.showGradesMode){
+                
+                this.switchBackToExamMode();
+                return;
+            }
+        }
 
   
 
