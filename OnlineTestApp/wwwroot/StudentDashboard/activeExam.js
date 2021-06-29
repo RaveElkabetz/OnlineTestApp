@@ -454,7 +454,7 @@ console.log(this.examId);
 app.component('question-list-item',{
     props:['question','indx'],
     template:`
-    <li >
+    <li style="margin-left:25%;"">
     <div >
     <div class="card question-card shadow" style="width: 55rem;">
       <div class=" ">

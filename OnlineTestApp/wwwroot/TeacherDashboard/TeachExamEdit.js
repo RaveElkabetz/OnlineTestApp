@@ -8,6 +8,8 @@ const app = Vue.createApp({
             examInstancesUrl: "https://localhost:44308/api/ExamInstance/",
             examInstancesUrlByExamId: "https://localhost:44308/api/ExamInstance/GetByExamId/",
             teacherName: "",
+            durationOfTest: localStorage.currentExamDuration,
+
             userId: localStorage.currentUserId,
             userPassword: localStorage.password,
             examId: localStorage.currentExamId,
@@ -15,7 +17,12 @@ const app = Vue.createApp({
             examDate: localStorage.currentExamDate,
             editExamMode: true,
             showGradesMode: false,
+            pushedEditAQuestion: false,
+            backToAddNewQuestionMode: true,
             isTheCurrentExmaHasStarted: false,
+      
+
+             
             //switchModes: null,
             firstQuestionToAdd:"",
             secondQuestionToAdd:"",
@@ -40,6 +47,7 @@ const app = Vue.createApp({
             toggleAddNewQuestion: false,
 
             newQuestionToSend:{
+                id: 0,
                 question: "",
                 choices: "",
                 correct: "",
@@ -104,6 +112,39 @@ const app = Vue.createApp({
                 }) 
 
         },
+        setDateOfTest(event)
+        {
+            console.log("set date"+event);
+            this.examDate = event.target.value;
+        },
+        submitDateTitleAndDuration()
+        {
+            
+                //use the old date
+                fetch(this.examsUrl+this.examId,{
+                    method: 'PUT',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify( {
+                        id: this.examId,
+                        title: this.examTitle,
+                        teacherId: this.userId,
+                        dateOfTest: this.examDate,
+                        durationMinutes: this.durationOfTest,
+                        
+    
+                    })
+                    
+                    
+    
+                });
+                localStorage.currentExamTitle =this.examTitle;
+                localStorage.currentExamDuration = this.durationOfTest;
+                localStorage.currentExamDate = this.examDate;
+              
+              
+        },
         /*switchModes(){
             this.editExamMode = !this.editExamMode;
             this.showGradesMode = !this.showGradesMode;
@@ -111,7 +152,18 @@ const app = Vue.createApp({
 
         },*/
         submitEditThisQuestion(){
-            //this.clearEditOrNewFields();
+
+
+
+
+
+
+
+
+
+
+
+            this.clearEditOrNewFields();
  
         },
         dateInPast(firstDate, secondDate) {
@@ -277,10 +329,41 @@ console.log(this.examId);
         {
             if(this.editState){
                 //fetch UPDATE to server
-                //return;
+                this.$root.newQuestionToSend.correct = this.theCorrectAnswer;
+                this.assembleTheAnswers();
+                console.log("entered submit with edit state");
+                fetch(this.questionUrl+this.newQuestionToSend.id,{
+                    method: 'PUT',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify( {
+                        id: this.newQuestionToSend.id,
+                        question: this.newQuestionToSend.question,
+                        choices: this.newQuestionToSend.choices,
+                        correct: this.newQuestionToSend.correct,
+                        points: this.newQuestionToSend.points,
+                        examId: this.examId
+    
+                    })
+    
+                });
+                this.clearEditOrNewFields();
+                this.editState = false;
+                this.addNewQuestionState = true;
+                this.$root.questionArray = [];
+             
+                this.$root.init();
+                return;
             }
             console.log("entered to submitNewQuestion");
             this.assembleTheAnswers();
+            console.log({  
+                question: this.newQuestionToSend.question,
+                choices: this.newQuestionToSend.choices,
+                correct: this.newQuestionToSend.correct,
+                points: this.newQuestionToSend.points,
+                examId: this.examId});
            
             fetch(this.questionUrl,{
                 method: 'POST',
@@ -338,7 +421,7 @@ console.log(this.examId);
 app.component('question-list-item',{
     props:['question','indx'],
     template:`
-    <li >
+    <li  style="margin-left:25%;">
     <div >
     <div class="card question-card shadow" style="width: 55rem;">
       <div class=" ">
@@ -381,9 +464,10 @@ app.component('question-list-item',{
             <div class="container">
             <div class="row">
                 <div class="col-1 mb-4"><a class="btn btn-warning btn-lg shadow" v-on:click="editThisQuestion" href="#" role="button">edit</a></div>
-                <div class="col-1 mb-4"><a class="btn btn-danger btn-lg shadow" href="#" role="button">delete</a></div>
-                <div class="col-6"></div>
-                <div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
+                <div class="col-1 mb-4"><a class="btn btn-danger btn-lg shadow" v-on:click="deleteThisQuestion" href="#" role="button">delete</a></div>
+                <div class="col-5"></div>
+                
+                <div class="col-3 pt-2"> <h4>The Answer: {{ question.correct }}</h4> </div>
                 <div class="col-2 pt-2"> <h4>Score: {{ question.points }}</h4> </div>
                 
             </div>
@@ -399,7 +483,9 @@ app.component('question-list-item',{
             firstQuestion: "",
             secondQuestion: "",
             thirdQuestion: "",
-            fourthQuestion: ""
+            fourthQuestion: "",
+            theCorrectAnswer: "",
+         //div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
 
 
 
@@ -414,32 +500,36 @@ app.component('question-list-item',{
             this.$root.editState = true;
             this.$root.addNewQuestionState= false;
             this.$root.questionToEdit = this.question;
+            this.$root.newQuestionToSend = this.question;
+            console.log(this.$root.newQuestionToSend);
             
-            this.$root.newQuestionToSend.question = this.question.question;
+           // this.$root.newQuestionToSend.question = this.question.question;
             this.$root.firstQuestionToAdd = this.firstQuestion;
             this.$root.secondQuestionToAdd = this.secondQuestion;
             this.$root.thirdQuestionToAdd = this.thirdQuestion;
             this.$root.fourthQuestionToAdd = this.fourthQuestion;
-            this.$root.newQuestionToSend.score = this.points;
+            this.$root.assembleTheAnswers();
+           // this.$root.newQuestionToSend.score = this.points;
+           this.theCorrectAnswer =  this.$root.newQuestionToSend.correct  ;
 
-            fetch(questionUrl + id, {
-                method: 'PUT'
-                ,
-                body: JSON.stringify( {
-                    question: this.newQuestionToSend.question,
-                    choices: this.newQuestionToSend.choices,
-                    correct: this.newQuestionToSend.correct,
-                    points: this.newQuestionToSend.points,
-                    examId: this.examId
+            // fetch(this.$root.questionUrl + this.question.id, {
+            //     method: 'PUT'
+            //     ,
+            //     body: JSON.stringify( {
+            //         question: this.$root.newQuestionToSend.question,
+            //         choices: this.$root.newQuestionToSend.choices,
+            //         correct: this.$root.newQuestionToSend.correct,
+            //         points: this.$root.newQuestionToSend.points,
+            //         examId: this.examId
 
-                })
-                })
-                .then(res => res.text()) // or res.json()
-                .then(res => console.log(res));
+            //     })
+            //     })
+            //     .then(res => res.text()) // or res.json()
+            //     .then(res => console.log(res));
              
-            this.$root.questionArray = [];  
+            //this.$root.questionArray = [];  
 
-            this.$root.init(); 
+            //this.$root.init(); 
 
         },
         unssembleTheAnswers(){
@@ -465,9 +555,9 @@ app.component('question-list-item',{
 
         },
         deleteThisQuestion(){
-            console.log(this.questionObj);
-            const id = this.questionObj.id;
-            fetch(questionUrl + id, {
+            console.log(this.question);
+            const id = this.question.id;
+            fetch(this.$root.questionUrl + id, {
                 method: 'DELETE',
                 })
                 .then(res => res.text()) // or res.json()
@@ -500,7 +590,8 @@ app.component('exam-grade-list-item',{
         border-radius: 4px;
         border-color:  rgb(148, 124, 105);
         border-style: initial;
-        margin-bottom: 1%;"
+        margin-bottom: 1%;
+        "
         >
     <div class="d-flex flex-row align-items-center"><i class="fa fa-check-circle checkicon"></i>
         <div class="ml-2">

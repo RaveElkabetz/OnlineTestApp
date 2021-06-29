@@ -1,11 +1,12 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="/icons/document-edit-flat.png"/>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <title>Teachers Dashboard</title>
+    <title>Students Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
     <link
@@ -56,25 +57,19 @@
                       
          
                         
-                        <div class="container mt-5" v-if="showGradesMode">
-                          <exam-grade-list-item
-                            v-for="exam in examsInstancesArray"
-                            v-bind:exam="exam">
-                        
-                          </exam-grade-list-item>
-                        </div>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
 
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <hr >
 
                   <div v-if='showExamsMode'>
-                        <hr v-if="!toggleAddNewTest">
+                        
 
                         <div v-if="!toggleAddNewTest" class="container">
  
@@ -170,6 +165,21 @@
                 </div>
             </div>
           </div>
+
+
+          <div class="container mt-5" v-if="showGradesMode">
+            
+            <h3 style="margin-bottom: 30px; margin-top: -25px;">Your Grades:</h3>
+            <exam-grade-list-item
+              v-for="exam in examsInstancesArray"
+              v-bind:exam="exam">
+          
+            </exam-grade-list-item>
+          </div>
+
+
+
+
         </div>
 
     </section>

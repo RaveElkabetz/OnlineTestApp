@@ -38,7 +38,7 @@
                 })
                 .then((data) =>{
                     console.log(data);
-                   // this.studentName = data.name;
+                    this.studentName = data.name;
                     if (data.password === this.userPassword) {
                         console.log("password match!");
                         //now need to show all his exams: GET all exam by teacher id-
@@ -163,12 +163,13 @@
                   //this.examsArray.shift();
              
                   console.log("new-logs-down");
-                  console.log(this.examsInstancesArray);
+                  
                   console.log(data);
     
                  
                  this.examsInstancesArray = [];
                  this.examsInstancesArray.push.apply(this.examsInstancesArray, data);
+                 console.log(this.examsInstancesArray);
         
                  } 
              
@@ -221,13 +222,7 @@
 
 
     },
-    watch:{
-        examsArray(){
-            if(this.examsArray[0]){
-                this.toggleAddNewTest = true;
-            }
-        }
-    }
+  
 
 
 
@@ -376,6 +371,73 @@ app.component('exam-list-item',{
     }
     
 
+
+});
+app.component('exam-grade-list-item',{
+    props:['exam'],
+    template:`<li class="grades d-flex justify-content-between  shadow" style="
+        background-color: #f8f8eb;
+        border-radius: 4px;
+        border-color:  rgb(148, 124, 105);
+        border-style: initial;
+        margin-bottom: 1%;"
+        >
+    <div class="d-flex flex-row align-items-center"><i class="fa fa-check-circle checkicon"></i>
+        <div style='padding: 5px;' class="ml-2">
+            <h6 class="mb-0">{{ exam.examTitle }}</h6>
+            <div  class="d-flex flex-row mt-1 text-black-50 date-time">
+                <div><i class="fa fa-calendar-o"></i><span class="ml-2"> {{exam.dateOfTest}}  </span></div>
+                
+            </div>
+
+        </div>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+        <div class="d-flex flex-column mr-2">
+            <div class="profile-image">             
+            <h5 style='padding: 5px;'>
+            Grade: {{ exam.grade }}
+            </h5> </div>
+        </div> <i class="fa fa-ellipsis-h"></i>
+    </div>
+</li>
+`,
+    data(){
+        return{
+
+        }
+    },
+    methods:{
+        deleteThisTest(){/*
+            console.log(this.exam);
+            const id = this.exam.teacherId;
+            fetch('https://localhost:44308/api/ExamInstance/' + id, {
+                method: 'DELETE',
+                })
+                .then(res => res.text()) // or res.json()
+                .then(res => console.log(res));
+            console.log("before del");
+            console.log(this.$root.examsArray); 
+            this.$root.examsArray = [];  
+            console.log("after del");
+            console.log(this.$root.examsArray);  
+            console.log("arrived to init in delete");
+            this.$root.init();   */        
+        },
+        enterToEditExamWindow(){
+            /*
+            localStorage.currentExamId = this.exam.id;
+            localStorage.currentExamTitle = this.exam.title;
+            localStorage.currentUserId = this.exam.teacherId;
+            localStorage.currentExamDate = this.exam.dateOfTest;
+            localStorage.currentExam = this.exam;
+            
+            window.location.href = 'https://localhost:44308/TeacherDashboard/TeachExamEdit.html';
+            */
+            
+
+        }
+    }
 
 });
 app.mount('#StudentDashboard');

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <link rel="icon" type="image/png" href="/icons/document-edit-flat.png"/>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -34,7 +35,7 @@
       </div>
     </nav>
     <p>&ensp;</p>
-    <p>&ensp;</p>
+   
     <div class="container mt-5" >
       <!--enter new question section-->
 
@@ -59,73 +60,151 @@
 
 </div>
 
-
 <div class="container mt-5" v-if="editExamMode" id="add-new-question">
-    <div class="card question-card shadow" style="width: 55rem;">
-      <div class="jumbotron ">
-          <div class="container">
-            <h1 class="display-4" v-if="addNewQuestionState">Enter a new question:</h1>
-            <h1 class="display-4" v-if="editState">Edit the selected question({{whichQuestionToEdit+1}}):</h1>
-            
-              <div class="container">
-                <div class="row">
-                   <div class="col-10">
-                     <input type="text" v-model="newQuestionToSend.question" class="form-control " placeholder="Enter the question text here:" aria-label="Question">
-                   </div>
-                   <div class="col-2">
-                     <input type="text" v-model="newQuestionToSend.score" class="form-control " placeholder="score" aria-label="score">
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <hr class="my-4">
+<div class="row">
+  <div class="col-3"></div>
+  <div class="col-6">
+  
+    <div class="input-group input-group-lg" style="">
+      <span class="input-group-text" id="inputGroup-sizing-lg">Duration:</span>
+      <input type="text"  v-model="durationOfTest" class="form-control" placeholder="In minutes" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+  </div>
+</div>
+<div class="col-3">
 
-          <div class="container">
-              <div class="row">
-                  <div class="col">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">1</span>
-                        <input type="text" v-model="firstQuestionToAdd" class="form-control" placeholder="Answer 1" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                  </div>
-                  <div class="col">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">2</span>
-                        <input type="text" v-model="secondQuestionToAdd" class="form-control" placeholder="Answer 2" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">3</span>
-                        <input type="text" v-model="thirdQuestionToAdd" class="form-control" placeholder="Answer 3" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                </div>
-                <div class="col">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">4</span>
-                        <input type="text" v-model="fourthQuestionToAdd" class="form-control" placeholder="Answer 3" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                </div>
-            </div>
-          </div>
-            <hr>
-            <div class="container">
-            <div class="row">
-                <div class="col-1  mb-4"><a class="btn btn-success btn-lg" v-on:click="submitNewQuestion" href="#" role="button">Add</a></div>
-                <div class="col-1  mb-4"><a class="btn btn-warning btn-lg" v-on:click="clearEditOrNewFields" href="#" role="button">Clear</a></div>
-                <div class="col-1"></div>
-                <div class="col-5"></div>
-                <div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
-                <div class="col-2  mb-4 ml-1"><a class="btn btn-danger btn-lg" v-if:="editState" v-on:click="switchToAddNewQuestionState" href="#" role="button">Cancel</a></div>
-                
-            </div>
+</div>
 
-          </div>
+</div>
+<div class="row">
+
+  <div class="col-3"></div>
+  <div class="col-6">
+  
+    <div class="input-group input-group-lg" style="">
+      <span class="input-group-text" id="inputGroup-sizing-lg">Title:</span>
+      <input type="text"  v-model="examTitle" class="form-control" placeholder="use this to edit the title of test" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+  </div>
+</div>
+<div class="col-3">
+
+</div>
+
+
+</div>
+
+<div class="row">
+
+  <div class="col-3"></div>
+  <div class="col-6">
+  
+    <div class="input-group input-group-lg" style="">
+      <span class="input-group-text"   id="inputGroup-sizing-default">The date of the test</span>
+    
+  <input type="date"  class="form-control" v-on:input="setDateOfTest" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+</div>
+</div>
+
+<div class="col-3">
+
+</div>
+</div>
+
+<div class="row">
+
+  <div class="col-3"></div>
+  <div class="col-6">
+  
+    <button type="button" @click="submitDateTitleAndDuration" class="btn btn-outline-success">Submit</button>
+</div>
+</div>
+
+<div class="col-3">
+
+</div>
+</div>
+
+
+</div>
+
+
+
+</div>
+
+<p>&ensp;</p>
+<div class="row">
+<div class="col-3"></div>
+  <div class=" col-4 card question-card shadow" style="width: 55rem; margin-left: 20px ;">
+    <div class="jumbotron ">
+        <div class="container">
+          <h1 class="display-4" v-if="addNewQuestionState">Enter a new question:</h1>
+          <h1 class="display-4" v-if="editState">Edit the selected question({{whichQuestionToEdit+1}}):</h1>
           
+            <div class="container">
+              <div class="row">
+                 <div class="col-10">
+                   <input type="text" v-model="newQuestionToSend.question" class="form-control " placeholder="Enter the question text here:" aria-label="Question">
+                 </div>
+                 <div class="col-2">
+                   <input type="text" v-model="newQuestionToSend.points" class="form-control " placeholder="score" aria-label="score">
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
+        <hr class="my-4">
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                  <div class="input-group flex-nowrap">
+                      <span class="input-group-text" id="addon-wrapping">1</span>
+                      <input type="text" v-model="firstQuestionToAdd" class="form-control" placeholder="Answer 1" aria-label="Username" aria-describedby="addon-wrapping">
+                    </div>
+                </div>
+                <div class="col">
+                  <div class="input-group flex-nowrap">
+                      <span class="input-group-text" id="addon-wrapping">2</span>
+                      <input type="text" v-model="secondQuestionToAdd" class="form-control" placeholder="Answer 2" aria-label="Username" aria-describedby="addon-wrapping">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                  <div class="input-group flex-nowrap">
+                      <span class="input-group-text" id="addon-wrapping">3</span>
+                      <input type="text" v-model="thirdQuestionToAdd" class="form-control" placeholder="Answer 3" aria-label="Username" aria-describedby="addon-wrapping">
+                    </div>
+              </div>
+              <div class="col">
+                  <div class="input-group flex-nowrap">
+                      <span class="input-group-text" id="addon-wrapping">4</span>
+                      <input type="text" v-model="fourthQuestionToAdd" class="form-control" placeholder="Answer 4" aria-label="Username" aria-describedby="addon-wrapping">
+                    </div>
+              </div>
+          </div>
+        </div>
+          <hr>
+          <div class="container">
+          <div class="row">
+            <div class="col-1  mb-4"><a v-if="editState" class="btn btn-success btn-lg" v-on:click="submitNewQuestion" href="#" role="button">Edit</a></div>
+
+              <div class="col-1  mb-4"><a v-if="!editState" class="btn btn-success btn-lg" v-on:click="submitNewQuestion" href="#" role="button">Add</a></div>
+              <div class="col-1  mb-4"><a class="btn btn-warning btn-lg" v-on:click="clearEditOrNewFields" href="#" role="button">Clear</a></div>
+              <div class="col-1"></div>
+              <div class="col-4"></div>
+              <div class="col-2"><input type="text" v-model="theCorrectAnswer" class="form-control" placeholder="The answer:" aria-label="Username" aria-describedby="addon-wrapping"></div>
+              <div class="col-2  mb-4 ml-1"><a class="btn btn-danger btn-lg" v-if:="editState" v-on:click="switchToAddNewQuestionState" href="#" role="button">Cancel</a></div>
+              
+          </div>
+
+        </div>
+        
+      </div>
+      <div class="col-3"></div>
+</div>
+
+  
+
   </div>
 
 <p>&ensp;</p>
@@ -134,7 +213,7 @@
 
 
   <!--list of question added-->
-  <div class="mt-3" v-if="editExamMode">
+  <div class="mt-3" v-if="editExamMode" style="position: relative">
     <ul >
       
        <question-list-item
@@ -146,6 +225,7 @@
       
     </ul>
   </div>
+</div>
 
   </div>
 
